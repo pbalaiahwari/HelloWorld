@@ -1,0 +1,974 @@
+<project>
+    <shortName>PredictGo</shortName>
+    <fullName>Logi Predict</fullName>
+    <version>1.1.70</version>
+    <installerFilename>Logi-Info-${product_shortname}-Setup-${product_version}.${platform_exec_suffix}</installerFilename>
+    <leftImage>supportfiles/LogiPredictLarge.png</leftImage>
+    <logoImage>supportfiles/LogiPredictSmall.png</logoImage>
+    <languageSelectionStyle>onlyEnglishNames</languageSelectionStyle>
+    <componentList>
+        <component>
+            <name>default</name>
+            <description>Default Component</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>1</selected>
+            <show>1</show>
+            <folderList>
+                <folder>
+                    <description>.NET installer</description>
+                    <destination>${installdir}</destination>
+                    <name>dotnet</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>../../../dotnet/dotNetFx40_Client_x86_x64.exe</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                    <ruleList>
+                        <!-- The .NET installer will be unpacked on demand
+            so we attach a rule that will be never passed to
+            prevent the automatic unpack process -->
+                        <isTrue value="0"/>
+                    </ruleList>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfiles</name>
+                    <platforms>all</platforms>
+                    <shortcutList>
+                        <shortcut>
+                            <comment>Uninstall</comment>
+                            <exec>${installdir}/${uninstallerName}</exec>
+                            <icon></icon>
+                            <name>Uninstall ${product_fullname}</name>
+                            <path>${installdir}</path>
+                            <platforms>all</platforms>
+                            <runAsAdmin>0</runAsAdmin>
+                            <runInTerminal>0</runInTerminal>
+                            <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                            <windowsExecArgs></windowsExecArgs>
+                            <windowsIcon></windowsIcon>
+                            <windowsPath>${installdir}</windowsPath>
+                        </shortcut>
+                    </shortcutList>
+                </folder>
+                <folder>
+                    <description>_Definitions</description>
+                    <destination>${installdir}/PredictGo/_Definitions</destination>
+                    <name>_Definitions</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>supportfiles/ApplicationNotepad.xml</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>supportfiles/_Settings.lgx</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>supportfiles/fresh_Settings.lgx</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>rdDataCache</description>
+                    <destination>${installdir}\PredictGo\rdDataCache</destination>
+                    <name>rdDataCache</name>
+                    <platforms>windows</platforms>
+                </folder>
+                <folder>
+                    <description>rdDownload</description>
+                    <destination>${installdir}\PredictGo\rdDownload</destination>
+                    <name>rdDownload</name>
+                    <platforms>windows</platforms>
+                </folder>
+                <folder>
+                    <description>R</description>
+                    <destination>${installdir}\PredictGo\R</destination>
+                    <name>R</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>Web/R/scripts</origin>
+                        </distributionDirectory>
+                        <distributionFile>
+                            <origin>Web/R/Rsetting</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>rworkspace</description>
+                    <destination>${installdir}\PredictGo\R\workspace</destination>
+                    <name>rworkspace</name>
+                    <platforms>windows</platforms>
+                </folder>
+                <folder>
+                    <description>icon</description>
+                    <destination>${installdir}\</destination>
+                    <name>icon</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>supportfiles/PredictGo.ico</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <postInstallationActionList>
+                <actionGroup>
+                    <actionList>
+                        <registrySet>
+                            <key>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\${project.windowsARPRegistryPrefix}</key>
+                            <name>Publisher</name>
+                            <type>REG_SZ</type>
+                            <value>Logi Analytics,Inc</value>
+                        </registrySet>
+                    </actionList>
+                </actionGroup>
+                <showProgressDialog>
+                    <abortOnError>0</abortOnError>
+                    <progressText>Downloading R-3.4.1....</progressText>
+                    <title>Downloading R-3.4.1....</title>
+                    <width>500</width>
+                    <actionList>
+                        <httpGet>
+                            <abortOnError>0</abortOnError>
+                            <breakpoint>1</breakpoint>
+                            <customErrorMessage>R-3.4.1-win.exe failed to Download. Active internet connection is needed. Please download and install at :- ${installdir}\PredictGo\R\R-3.4.1</customErrorMessage>
+                            <filename>${installdir}\PredictGo\R\R-3.4.1-win.exe</filename>
+                            <url>http://cran.r-project.org/bin/windows/base/old/3.4.1/R-3.4.1-win.exe</url>
+                        </httpGet>
+                    </actionList>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <value1>${Rsetup}</value1>
+                            <value2>installR</value2>
+                        </compareValues>
+                    </ruleList>
+                </showProgressDialog>
+                <writeFile>
+                    <abortOnError>0</abortOnError>
+                    <path>${installdir}\PredictGo\R\R.bat</path>
+                    <progressText>installing R-3.4.1.....</progressText>
+                    <text>"${installdir}\PredictGo\R\R-3.4.1-win.exe" /DIR="${installdir}\PredictGo\R\R-3.4.1" /LOADINF="${installdir}\PredictGo\R\Rsetting" </text>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <value1>${Rsetup}</value1>
+                            <value2>installR</value2>
+                        </compareValues>
+                        <fileExists>
+                            <path>${installdir}\PredictGo\R\R-3.4.1-win.exe</path>
+                        </fileExists>
+                    </ruleList>
+                </writeFile>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <customErrorMessage>R failed to install.</customErrorMessage>
+                    <program>${installdir}\PredictGo\R\R.bat</program>
+                    <programArguments></programArguments>
+                    <progressText>R-SetUp....</progressText>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <value1>${Rsetup}</value1>
+                            <value2>installR</value2>
+                        </compareValues>
+                        <fileExists>
+                            <path>${installdir}\PredictGo\R\R-3.4.1-win.exe</path>
+                        </fileExists>
+                    </ruleList>
+                </runProgram>
+                <deleteFile>
+                    <path>${installdir}\PredictGo\R\Rsetting</path>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\PredictGo\R\Rsetting</path>
+                        </fileExists>
+                    </ruleList>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}\PredictGo\R\R-3.4.1-win.exe</path>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\PredictGo\R\R-3.4.1-win.exe</path>
+                        </fileExists>
+                    </ruleList>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}\PredictGo\R\R.bat</path>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\PredictGo\R\R.bat</path>
+                        </fileExists>
+                    </ruleList>
+                </deleteFile>
+                <addDirectoriesToUninstaller>
+                    <abortOnError>0</abortOnError>
+                    <addContents>1</addContents>
+                    <files>${installdir}\PredictGo\R\workspace</files>
+                </addDirectoriesToUninstaller>
+                <actionGroup>
+                    <abortOnError>0</abortOnError>
+                    <actionList>
+                        <writeFile>
+                            <abortOnError>0</abortOnError>
+                            <path>${installdir}\PredictGo\iisConfig.bat</path>
+                            <text>dism /online /enable-feature /all /featurename:IIS-ASPNET45 /NoRestart
+dism /online /enable-feature /featurename:IIS-CGI /NoRestart
+set PATH=%PATH%;%windir%\system32\inetsrv
+appcmd add apppool /name:PredictGo /managedRuntimeVersion:v4.0 /managedPipelineMode:Integrated
+appcmd add app /site.name:"Default Web Site" /path:/PredictGo /physicalPath:"${installdir}\PredictGo"
+appcmd set app /app.name: "Default Web Site/PredictGo" /applicationPool:"PredictGo"
+rem appcmd set config /section:applicationPools /[name='PredictGo'].processModel.identityType:LocalSystem
+</text>
+                            <ruleList>
+                                <compareValues>
+                                    <logic>equals</logic>
+                                    <value1>${iisConfig}</value1>
+                                    <value2>installiis</value2>
+                                </compareValues>
+                            </ruleList>
+                        </writeFile>
+                        <runProgram>
+                            <abortOnError>0</abortOnError>
+                            <customErrorMessage>Failed to enable ASP.NET and IIS Config.</customErrorMessage>
+                            <program>${installdir}\PredictGo\iisConfig.bat</program>
+                            <programArguments></programArguments>
+                            <progressText>Enabling ASP.NET and IIS Configuration.</progressText>
+                            <ruleList>
+                                <compareValues>
+                                    <logic>equals</logic>
+                                    <value1>${iisConfig}</value1>
+                                    <value2>installiis</value2>
+                                </compareValues>
+                            </ruleList>
+                        </runProgram>
+                        <deleteFile>
+                            <path>${installdir}\PredictGo\iisConfig.bat</path>
+                            <ruleList>
+                                <fileExists>
+                                    <path>${installdir}\PredictGo\iisConfig.bat</path>
+                                </fileExists>
+                            </ruleList>
+                        </deleteFile>
+                        <runProgram>
+                            <program>iisreset</program>
+                            <programArguments></programArguments>
+                        </runProgram>
+                    </actionList>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <value1>${java_code}</value1>
+                            <value2>dotnet</value2>
+                        </compareValues>
+                    </ruleList>
+                </actionGroup>
+                <showProgressDialog>
+                    <abortOnError>0</abortOnError>
+                    <progressText>Downloading R libraries...</progressText>
+                    <title>Downloading R libraries....</title>
+                    <width>500</width>
+                    <actionList>
+                        <writeFile>
+                            <path>${installdir}\PredictGo\R\Rscript.bat</path>
+                            <text>@echo off
+PATH "${installdir}\PredictGo\R\R-3.4.1\bin";%path%
+cd "${installdir}PredictGo\R\scripts\"
+Rscript rdPackageLoader.R</text>
+                        </writeFile>
+                        <runProgram>
+                            <customErrorMessage>Failed to download the R libraries.</customErrorMessage>
+                            <program>${installdir}\PredictGo\R\Rscript.bat</program>
+                            <programArguments></programArguments>
+                            <progressText>This may take several minutes.  Please wait.</progressText>
+                            <workingDirectory>${installdir}\PredictGo\R\scripts</workingDirectory>
+                        </runProgram>
+                    </actionList>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}/PredictGo/R/R-3.4.1/bin/Rscript.exe</path>
+                        </fileExists>
+                    </ruleList>
+                </showProgressDialog>
+                <deleteFile>
+                    <abortOnError>0</abortOnError>
+                    <path>${installdir}\PredictGo\R\Rscript.bat</path>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\PredictGo\R\Rscript.bat</path>
+                        </fileExists>
+                    </ruleList>
+                </deleteFile>
+                <setWindowsACL>
+                    <action>allow</action>
+                    <files>${installdir}\*</files>
+                    <permissions>file_all_access</permissions>
+                    <recurseContainers>1</recurseContainers>
+                    <recurseObjects>1</recurseObjects>
+                </setWindowsACL>
+                <substitute>
+                    <abortOnError>0</abortOnError>
+                    <files>${installdir}/PredictGo/_Definitions/_Settings.lgx</files>
+                    <type>regexp</type>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <value1>${java_code}</value1>
+                            <value2>java_application</value2>
+                        </compareValues>
+                    </ruleList>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>"http://localhost/PredictGo"</pattern>
+                            <value>"http://localhost:8080/PredictGo"</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+            </postInstallationActionList>
+            <postUninstallationActionList>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <program>${installdir}\PredictGo\issConfigDelete.bat</program>
+                    <programArguments></programArguments>
+                    <showMessageOnError>0</showMessageOnError>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\PredictGo\issConfigDelete.bat</path>
+                        </fileExists>
+                    </ruleList>
+                </runProgram>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <program>${installdir}\PredictGo\R\R-3.4.1\unins000.exe</program>
+                    <programArguments>/VERYSILENT</programArguments>
+                    <progressText>Uninstalling R-3.4.1</progressText>
+                    <showMessageOnError>0</showMessageOnError>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\PredictGo\R\R-3.4.1\unins000.exe</path>
+                        </fileExists>
+                    </ruleList>
+                </runProgram>
+                <deleteFile>
+                    <abortOnError>0</abortOnError>
+                    <path>${installdir}\PredictGo\R</path>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\PredictGo</path>
+                        </fileExists>
+                    </ruleList>
+                </deleteFile>
+                <deleteFile>
+                    <abortOnError>0</abortOnError>
+                    <path>${installdir}\PredictGo\issConfigDelete.bat</path>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\PredictGo\issConfigDelete.bat</path>
+                        </fileExists>
+                    </ruleList>
+                </deleteFile>
+            </postUninstallationActionList>
+            <preUninstallationActionList>
+                <writeFile>
+                    <abortOnError>0</abortOnError>
+                    <path>${installdir}\PredictGo\issConfigDelete.bat</path>
+                    <showMessageOnError>0</showMessageOnError>
+                    <text>set PATH=%PATH%;%windir%\system32\inetsrv
+appcmd stop apppool PredictGo
+appcmd delete app "Default Web Site/PredictGo"
+appcmd delete apppool PredictGo</text>
+                </writeFile>
+            </preUninstallationActionList>
+            <startMenuShortcutList>
+                <startMenuFolder>
+                    <name>Logi Self Service Predictive Analytics.</name>
+                    <platforms>windows</platforms>
+                    <startMenuShortcutList>
+                        <startMenuLinkShortcut>
+                            <comment>Launch</comment>
+                            <name>Launch</name>
+                            <runAsAdmin>0</runAsAdmin>
+                            <runInTerminal>0</runInTerminal>
+                            <url>http://localhost/PredictGo/</url>
+                            <windowsIcon>${installdir}/PredictGo.ico</windowsIcon>
+                        </startMenuLinkShortcut>
+                        <startMenuShortcut>
+                            <comment>Uninstall ${product_fullname}</comment>
+                            <name>Uninstall</name>
+                            <runAsAdmin>0</runAsAdmin>
+                            <runInTerminal>0</runInTerminal>
+                            <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                            <windowsExecArgs></windowsExecArgs>
+                            <windowsIcon></windowsIcon>
+                            <windowsPath>${installdir}/</windowsPath>
+                        </startMenuShortcut>
+                        <startMenuShortcut>
+                            <comment></comment>
+                            <name>Application setting</name>
+                            <runAsAdmin>0</runAsAdmin>
+                            <runInTerminal>0</runInTerminal>
+                            <windowsExec>notepad.exe</windowsExec>
+                            <windowsExecArgs>"${installdir}/PredictGo/_Definitions/_Settings.lgx"</windowsExecArgs>
+                            <windowsIcon>${installdir}\PredictGo.ico</windowsIcon>
+                            <windowsPath>${installdir}\</windowsPath>
+                        </startMenuShortcut>
+                    </startMenuShortcutList>
+                </startMenuFolder>
+            </startMenuShortcutList>
+        </component>
+        <component>
+            <name>upgrade</name>
+            <description>Upgrade Component</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>0</selected>
+            <show>1</show>
+            <folderList>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfiles</name>
+                    <platforms>all</platforms>
+                    <shortcutList>
+                        <shortcut>
+                            <comment>Uninstall</comment>
+                            <exec>${installdir}/${uninstallerName}</exec>
+                            <icon></icon>
+                            <name>Uninstall ${product_fullname}</name>
+                            <path>${installdir}</path>
+                            <platforms>all</platforms>
+                            <runAsAdmin>0</runAsAdmin>
+                            <runInTerminal>0</runInTerminal>
+                            <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                            <windowsExecArgs></windowsExecArgs>
+                            <windowsIcon></windowsIcon>
+                            <windowsPath>${installdir}</windowsPath>
+                        </shortcut>
+                    </shortcutList>
+                </folder>
+                <folder>
+                    <description>_Definitions</description>
+                    <destination>${installdir}/PredictGo/_Definitions</destination>
+                    <name>_Definitions</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>supportfiles/ApplicationNotepad.xml</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>supportfiles/fresh_Settings.lgx</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>rdDataCache</description>
+                    <destination>${installdir}\PredictGo\rdDataCache</destination>
+                    <name>rdDataCache</name>
+                    <platforms>windows</platforms>
+                </folder>
+                <folder>
+                    <description>rdDownload</description>
+                    <destination>${installdir}\PredictGo\rdDownload</destination>
+                    <name>rdDownload</name>
+                    <platforms>windows</platforms>
+                </folder>
+                <folder>
+                    <description>R</description>
+                    <destination>${installdir}\PredictGo\R</destination>
+                    <name>R</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>Web/R/scripts</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>icon</description>
+                    <destination>${installdir}\</destination>
+                    <name>icon</name>
+                    <platforms>windows</platforms>
+                    <actionList>
+                        <setInstallerVariable>
+                            <name>project.overwritePolicy</name>
+                            <value>onlyIfNewer</value>
+                        </setInstallerVariable>
+                    </actionList>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>supportfiles/PredictGo.ico</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>_Reports</description>
+                    <destination>${installdir}/PredictGo/_Definitions/</destination>
+                    <name>_Reports</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>Web/_Definitions/_Reports</origin>
+                            <onPackingFilterList>
+                                <fileNameFilter>
+                                    <logic>matches</logic>
+                                    <pattern>goCustomizations.*</pattern>
+                                    <patternType>regexp</patternType>
+                                </fileNameFilter>
+                            </onPackingFilterList>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>_SupportFiles</description>
+                    <destination>${installdir}/PredictGo/</destination>
+                    <name>_SupportFiles</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>Web/_SupportFiles</origin>
+                            <onPackingFilterList>
+                                <fileNameFilter>
+                                    <logic>matches</logic>
+                                    <pattern>goCustomizations.*</pattern>
+                                    <patternType>regexp</patternType>
+                                </fileNameFilter>
+                            </onPackingFilterList>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <postInstallationActionList>
+                <addDirectoriesToUninstaller>
+                    <abortOnError>0</abortOnError>
+                    <addContents>1</addContents>
+                    <files>${installdir}\PredictGo\R\workspace</files>
+                </addDirectoriesToUninstaller>
+                <runProgram>
+                    <program>iisreset</program>
+                    <programArguments></programArguments>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\PredictGo\bin</path>
+                        </fileExists>
+                    </ruleList>
+                </runProgram>
+            </postInstallationActionList>
+            <postUninstallationActionList>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <program>${installdir}\PredictGo\issConfigDelete.bat</program>
+                    <programArguments></programArguments>
+                    <showMessageOnError>0</showMessageOnError>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\PredictGo\issConfigDelete.bat</path>
+                        </fileExists>
+                    </ruleList>
+                </runProgram>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <program>${installdir}\PredictGo\R\R-3.4.1\unins000.exe</program>
+                    <programArguments>/VERYSILENT</programArguments>
+                    <progressText>Uninstalling R-3.4.1</progressText>
+                    <showMessageOnError>0</showMessageOnError>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\PredictGo\R\R-3.4.1\unins000.exe</path>
+                        </fileExists>
+                    </ruleList>
+                </runProgram>
+                <deleteFile>
+                    <abortOnError>0</abortOnError>
+                    <path>${installdir}\PredictGo\R</path>
+                    <showMessageOnError>0</showMessageOnError>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\PredictGo</path>
+                        </fileExists>
+                    </ruleList>
+                </deleteFile>
+                <deleteFile>
+                    <abortOnError>0</abortOnError>
+                    <path>${installdir}\PredictGo\issConfigDelete.bat</path>
+                    <showMessageOnError>0</showMessageOnError>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\PredictGo\issConfigDelete.bat</path>
+                        </fileExists>
+                    </ruleList>
+                </deleteFile>
+            </postUninstallationActionList>
+            <preUninstallationActionList>
+                <writeFile>
+                    <abortOnError>0</abortOnError>
+                    <path>${installdir}\PredictGo\issConfigDelete.bat</path>
+                    <showMessageOnError>0</showMessageOnError>
+                    <text>set PATH=%PATH%;%windir%\system32\inetsrv
+appcmd delete app "Default Web Site/PredictGo"
+appcmd delete apppool PredictGo</text>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\PredictGo\bin</path>
+                        </fileExists>
+                    </ruleList>
+                </writeFile>
+            </preUninstallationActionList>
+        </component>
+    </componentList>
+    <initializationActionList>
+        <logMessage>
+            <abortOnError>0</abortOnError>
+            <enableTimeStamp>0</enableTimeStamp>
+            <text>Version:- ${product_version}</text>
+        </logMessage>
+        <registryGet>
+            <key>HKEY_LOCAL_MACHINE\Software\${project.windowsSoftwareRegistryPrefix}</key>
+            <name>Location</name>
+            <variable>installdir</variable>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </registryGet>
+        <createTimeStamp>
+            <format>%Y%m%d%H%M%S</format>
+            <variable>timestamp</variable>
+        </createTimeStamp>
+        <actionGroup>
+            <actionList>
+                <showWarning>
+                    <text>This install of ${product_fullname} Module supports 64-bit platform. Installer will exit now.</text>
+                </showWarning>
+                <exit>
+                    <exitCode>1</exitCode>
+                </exit>
+            </actionList>
+            <ruleList>
+                <platformTest>
+                    <type>windows-x86</type>
+                </platformTest>
+            </ruleList>
+        </actionGroup>
+    </initializationActionList>
+    <preInstallationActionList>
+        <setWindowsACL>
+            <action>allow</action>
+            <files>${installdir}\*</files>
+            <permissions>file_all_access</permissions>
+            <recurseContainers>1</recurseContainers>
+            <recurseObjects>1</recurseObjects>
+        </setWindowsACL>
+
+        <!--<showInfo text="JAVA ${java_autodetected}"/>-->
+        <componentSelection>
+            <deselect>default</deselect>
+            <select>upgrade</select>
+            <ruleList>
+                <fileExists path="${installdir}/uninstall.exe"/>
+            </ruleList>
+        </componentSelection>
+        <actionGroup>
+            <actionList>
+                <!-- <showInfo>
+                    <text>An existing installation has been detected in ${installdir}.</text>
+                </showInfo>-->
+                <showQuestion>
+                    <default>yes</default>
+                    <text>A version of ${product_fullname} is already installed in ${installdir}. Would you like to upgrade to version ${project.version}?
+Please note: Clicking Yes then cancelling later may result in a corrupted application.</text>
+                    <title>PredictGo Module Upgrade</title>
+                    <variable>shouldupgrade</variable>
+                </showQuestion>
+                <exit>
+                    <exitCode>1</exitCode>
+                    <ruleList>
+                        <isFalse>
+                            <value>${shouldupgrade}</value>
+                        </isFalse>
+                    </ruleList>
+                </exit>
+                <setInstallerVariable name="project.parameter(installdir).ask" value="0"/>
+            </actionList>
+
+            <!-- Assume an existing installation if ${installdir} directory exists -->
+            <ruleList>
+                <fileExists path="${installdir}/uninstall.exe"/>
+
+                <!-- <fileTest condition="exists" path="${installdir}"/>-->
+            </ruleList>
+        </actionGroup>
+        <autodetectDotNetFramework>
+            <abortOnError>0</abortOnError>
+            <ruleList>
+                <fileTest>
+                    <condition>not_exists</condition>
+                    <path>${installdir}/uninstall.exe</path>
+                </fileTest>
+            </ruleList>
+            <validDotNetVersionList>
+                <validDotNetVersion>
+                    <frameworkType>any</frameworkType>
+                    <maxVersion></maxVersion>
+                    <minVersion>4.0</minVersion>
+                </validDotNetVersion>
+            </validDotNetVersionList>
+        </autodetectDotNetFramework>
+        <logMessage>
+            <enableTimeStamp>0</enableTimeStamp>
+            <text>DotNet version:- ${dotnet_version}</text>
+        </logMessage>
+    </preInstallationActionList>
+    <readyToInstallActionList>
+        <actionGroup>
+            <actionList>
+                <registryGet>
+                    <key>HKEY_LOCAL_MACHINE\Software\${project.windowsSoftwareRegistryPrefix}</key>
+                    <name>Version</name>
+                    <variable>oldVersion</variable>
+                </registryGet>
+
+                <!-- Delete the old ARP registry keys -->
+                <registryDelete>
+                    <key>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${project.fullName} ${oldVersion}</key>
+                    <name></name>
+                </registryDelete>
+                <registryDelete>
+                    <key>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Management\ARPCache\${project.fullName} ${oldVersion}</key>
+                    <name></name>
+                </registryDelete>
+            </actionList>
+            <ruleList>
+                <platformTest type="windows"/>
+
+                <!--<isTrue value="${isUpgradeMode}"/>-->
+                <fileExists path="${installdir}/uninstall.exe"/>
+            </ruleList>
+        </actionGroup>
+        <actionGroup>
+            <abortOnError>0</abortOnError>
+            <progressText>Installing .NET framework</progressText>
+            <actionList>
+                <unpackFile>
+                    <component>default</component>
+                    <destination>${system_temp_directory}/dotNetFx40_Client_x86_x64.exe</destination>
+                    <folder>dotnet</folder>
+                    <origin>dotNetFx40_Client_x86_x64.exe</origin>
+                </unpackFile>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <program>${system_temp_directory}/dotNetFx40_Client_x86_x64.exe</program>
+                    <programArguments>/q /norestart</programArguments>
+                </runProgram>
+
+                <!-- Delete the .NET installer -->
+                <deleteFile>
+                    <path>${system_temp_directory}/dotNetFx40_Client_x86_x64.exe</path>
+                </deleteFile>
+            </actionList>
+            <ruleList>
+                <isFalse>
+                    <value>${dotnet_autodetected}</value>
+                </isFalse>
+                <fileTest>
+                    <condition>not_exists</condition>
+                    <path>${installdir}/uninstall.exe</path>
+                </fileTest>
+            </ruleList>
+        </actionGroup>
+    </readyToInstallActionList>
+    <disableSplashScreen>1</disableSplashScreen>
+    <enableRollback>1</enableRollback>
+    <enableTimestamp>1</enableTimestamp>
+    <height>420</height>
+    <installationLogFile>${installdir}/${project.shortName}-${product_version}-installLog.log</installationLogFile>
+    <productDisplayIcon>${installdir}\PredictGo.ico</productDisplayIcon>
+    <productDisplayName>${product_fullname} ${project.version}</productDisplayName>
+    <readmeFileEncoding>utf-8</readmeFileEncoding>
+    <requireInstallationByRootUser>1</requireInstallationByRootUser>
+    <rollbackBackupDirectory>${system_temp_directory}/backup</rollbackBackupDirectory>
+    <saveRelativePaths>1</saveRelativePaths>
+    <showFileUnpackingProgress>0</showFileUnpackingProgress>
+    <signWindowsUninstaller>1</signWindowsUninstaller>
+    <slideShowLoop>0</slideShowLoop>
+    <uninstallationLogFile>${system_temp_directory}/${project.shortName}-uninstallation-${timestamp}.log</uninstallationLogFile>
+    <vendor>LogiAnalytics</vendor>
+    <width>600</width>
+    <windows64bitMode>1</windows64bitMode>
+    <windowsExecutableIcon>supportfiles/PredictGo.ico</windowsExecutableIcon>
+    <windowsSigningPkcs12File>supportfiles/Logi Analytics, Inc_.pfx</windowsSigningPkcs12File>
+    <windowsSigningPkcs12Password>logipass</windowsSigningPkcs12Password>
+    <windowsSigningTimestampServer>http://timestamp.digicert.com</windowsSigningTimestampServer>
+    <windowsUninstallerExecutableIcon>supportfiles/PredictGo.ico</windowsUninstallerExecutableIcon>
+    <customLanguageFileList>
+        <language>
+            <code>en</code>
+            <file>supportfiles/PredictGo_en.lng</file>
+        </language>
+    </customLanguageFileList>
+    <parameterList>
+        <licenseParameter>
+            <name>logi_license</name>
+            <title>Logi Analytics License Agreement</title>
+            <description>Please read the following License Agreement. You must accept the terms of this agreement before continuing with the installation.</description>
+            <explanation></explanation>
+            <file>supportfiles/License.txt</file>
+            <htmlFile></htmlFile>
+            <insertAfter>welcome</insertAfter>
+            <wrapText>1</wrapText>
+            <licenseFileList>
+                <licenseFile>
+                    <code>en</code>
+                    <file></file>
+                </licenseFile>
+            </licenseFileList>
+        </licenseParameter>
+        <choiceParameter>
+            <name>Rsetup</name>
+            <title>Choice of R-3.4.1 setup for PredictGo.</title>
+            <description></description>
+            <explanation>Logi Predict requires the R runtime.                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </explanation>
+            <value></value>
+            <default>installR</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <displayType>radiobuttons</displayType>
+            <insertBefore>iisConfig</insertBefore>
+            <ordering>default</ordering>
+            <width>40</width>
+            <optionList>
+                <option>
+                    <description></description>
+                    <image></image>
+                    <text>Yes, download and install R-3.4.1 now.</text>
+                    <value>installR</value>
+                </option>
+                <option>
+                    <description>Install later at location:-${installdir}\PredictGo\R\R-3.4.1</description>
+                    <image></image>
+                    <text>No, I will download and install R-3.4.1 myself at a later time.</text>
+                    <value>installlater</value>
+                </option>
+            </optionList>
+            <ruleList>
+                <fileTest>
+                    <condition>not_exists</condition>
+                    <path>${installdir}\uninstall.exe</path>
+                </fileTest>
+            </ruleList>
+        </choiceParameter>
+        <directoryParameter>
+            <name>installdir</name>
+            <description>Installer.Parameter.installdir.description</description>
+            <explanation>Installer.Parameter.installdir.explanation</explanation>
+            <value></value>
+            <default>C:\Program Files\Logi Analytics\Logi Predict</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <cliOptionName>prefix</cliOptionName>
+            <insertBefore>readytoinstall</insertBefore>
+            <mustBeWritable>1</mustBeWritable>
+            <mustExist>0</mustExist>
+            <width>60</width>
+        </directoryParameter>
+        <choiceParameter>
+            <name>iisConfig</name>
+            <title>Register this Application in your Web Application Server.</title>
+            <description></description>
+            <explanation>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </explanation>
+            <value></value>
+            <default>installiis</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <displayType>radiobuttons</displayType>
+            <insertBefore>${installdir}</insertBefore>
+            <ordering>default</ordering>
+            <width>40</width>
+            <optionList>
+                <option>
+                    <description>1. Enable ASP.NET45 and IIS if not present.
+2. Creates an application pool with ASP.NET version set to v4.0.
+3. Creates an virtual directory to the new web application folder.
+4. Start the web site if stopped.
+5. Set security access rights.</description>
+                    <image></image>
+                    <text>Yes, register this application to web application server.</text>
+                    <value>installiis</value>
+                </option>
+                <option>
+                    <description></description>
+                    <image></image>
+                    <text>No, don't register this application to web application server.</text>
+                    <value>noinstall</value>
+                </option>
+            </optionList>
+            <ruleList>
+                <fileTest>
+                    <condition>not_exists</condition>
+                    <path>${installdir}\uninstall.exe</path>
+                </fileTest>
+                <compareValues>
+                    <logic>equals</logic>
+                    <value1>${java_code}</value1>
+                    <value2>dotnet</value2>
+                </compareValues>
+            </ruleList>
+        </choiceParameter>
+        <choiceParameter>
+            <name>java_code</name>
+            <title>Select the program features to install.</title>
+            <description>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </description>
+            <explanation>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </explanation>
+            <value></value>
+            <default>dotnet</default>
+            <allowEmptyValue>1</allowEmptyValue>
+            <displayType>radiobuttons</displayType>
+            <insertAfter>logi_license</insertAfter>
+            <ordering>default</ordering>
+            <width>40</width>
+            <optionList>
+                <option>
+                    <description></description>
+                    <image></image>
+                    <text>Install the .NET version.</text>
+                    <value>dotnet</value>
+                </option>
+                <option>
+                    <description></description>
+                    <image></image>
+                    <text>Install the Java version.</text>
+                    <value>java_application</value>
+                </option>
+            </optionList>
+            <ruleList>
+                <fileTest>
+                    <condition>not_exists</condition>
+                    <path>${installdir}\uninstall.exe</path>
+                </fileTest>
+            </ruleList>
+        </choiceParameter>
+        <choiceParameter>
+            <name>uninstall</name>
+            <description></description>
+            <explanation>                                                                                                                                                                                                                                                                                                                                                                                   </explanation>
+            <value></value>
+            <default>repair</default>
+            <allowEmptyValue>1</allowEmptyValue>
+            <displayType>radiobuttons</displayType>
+            <ordering>default</ordering>
+            <width>40</width>
+            <optionList>
+                <option>
+                    <description>Reinstalls the application.</description>
+                    <image>../../../Users/PBalaiahwari/Downloads/repair72x72.png</image>
+                    <text>repair</text>
+                    <value>repair</value>
+                </option>
+                <option>
+                    <description>Removes the entire application.</description>
+                    <image>../../../Users/PBalaiahwari/Downloads/uninstall72x72.png</image>
+                    <text>remove</text>
+                    <value>remove</value>
+                </option>
+            </optionList>
+        </choiceParameter>
+    </parameterList>
+</project>
+

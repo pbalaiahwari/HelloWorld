@@ -1,0 +1,39 @@
+<functionDefinitionList>
+        <actionDefinition>
+            <name>resolveSymlinkRecursive</name>
+            <actionList>
+                <globalVariables names="${target}"/>
+                <if>
+                    <actionList>
+                        <getSymLinkTarget link="${link}" variable="path"/>
+                    </actionList>
+                    <conditionRuleList>
+                        <fileTest path="${link}" condition="is_symlink"/>
+                    </conditionRuleList>
+                </if>
+                <setInstallerVariable name="${target}" value="${path}"/>
+            </actionList>
+            <parameterList>
+                <stringParameter name="target" value="" default=""/>
+                <stringParameter name="link" value="" default=""/>
+            </parameterList>
+        </actionDefinition>
+    </functionDefinitionList>
+    <preInstallationActionList>
+        <autodetectJava>
+            <abortOnError>0</abortOnError>
+            <promptUser>0</promptUser>
+            <showMessageOnError>0</showMessageOnError>
+            <validVersionList>
+                <validVersion>
+                    <bitness>64</bitness>
+                    <maxVersion></maxVersion>
+                    <minVersion>1.8</minVersion>
+                    <requireJDK>0</requireJDK>
+                    <vendor></vendor>
+                </validVersion>
+            </validVersionList>
+        </autodetectJava>
+        <resolveSymlinkRecursive link="${java_executable}" target="resolved_java_executable"/>
+        <showInfo text="${resolved_java_executable}"/>
+    </preInstallationActionList>

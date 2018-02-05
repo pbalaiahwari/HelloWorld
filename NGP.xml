@@ -1,0 +1,1615 @@
+<project>
+    <shortName>Discovery</shortName>
+    <fullName>Logi Discovery</fullName>
+    <version>3.0.0</version>
+    <leftImage>supportfiles/discovery_left.png</leftImage>
+    <logoImage>supportfiles/discovery_top_right.png</logoImage>
+    <splashImage>supportfiles/splash.png</splashImage>
+    <languageSelectionStyle>onlyEnglishNames</languageSelectionStyle>
+    <componentList>
+        <component>
+            <name>default</name>
+            <description>Default Component</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>1</selected>
+            <show>0</show>
+            <folderList>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfiles</name>
+                    <platforms>all</platforms>
+                    <shortcutList>
+                        <shortcut>
+                            <comment>Uninstall</comment>
+                            <exec>${installdir}/${uninstallerName}</exec>
+                            <icon></icon>
+                            <name>Uninstall ${product_fullname}</name>
+                            <path>${installdir}</path>
+                            <platforms>all</platforms>
+                            <runAsAdmin>0</runAsAdmin>
+                            <runInTerminal>0</runInTerminal>
+                            <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                            <windowsExecArgs></windowsExecArgs>
+                            <windowsIcon></windowsIcon>
+                            <windowsPath>${installdir}</windowsPath>
+                        </shortcut>
+                    </shortcutList>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfileswindows</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>../output/platform</origin>
+                        </distributionDirectory>
+
+                        <!--   <distributionDirectory>
+                            <origin>../output/platform/ds-extensions</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/examples</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/authorizationImport-examples</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/lib</origin>
+                        </distributionDirectory>
+						<distributionDirectory>
+                            <origin>../output/platform/web-server</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/ds</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/settings</origin>
+                        </distributionDirectory>
+						<distributionDirectory>
+                            <origin>../output/platform/connection</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/ldap</origin>
+                        </distributionDirectory>
+						<distributionDirectory>
+                            <origin>../output/platform/schemata</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/bin</origin>
+                            <onPackingFilterList>
+                                <fileNameFilter logic="does_not_match" pattern="*.sh"/>
+                            </onPackingFilterList>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/cache</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/db</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/logs</origin>
+                        </distributionDirectory>-->
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <destination>${installdir}/platform</destination>
+                    <name>ngprestoffiles</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>licenses</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>sandbox-win/nodejs</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>supportfiles/nssm</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>thirdparty-executables</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <destination>${installdir}</destination>
+                    <name>ngpicon</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>supportfiles/platformdiscovery.ico</origin>
+                        </distributionFile>
+
+                        <!--   <distributionFile allowWildcards="1">
+                            <origin>../output/platform/as.v.*</origin>
+                        </distributionFile>
+                        <distributionFile allowWildcards="1">
+                            <origin>../output/platform/ds.v.*</origin>
+                        </distributionFile> -->
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <destination>${installdir}/platform</destination>
+                    <name>ngpjava</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>sandbox-win/java</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                    <ruleList>
+                        <isTrue value="${bundle_java}"/>
+                    </ruleList>
+                </folder>
+            </folderList>
+            <postInstallationActionList>
+                <writeFile>
+                    <encoding>utf-8</encoding>
+                    <path>${installdir}/platform/nssm/install-app-win-service.bat</path>
+                    <text>"${installdir}/platform/nssm/nssm.exe" install LogiApplicationService "${installdir}/platform/web-server/nssmnodeserver.bat" &gt;&gt; "${installdir}/platform/nssm/nssmnodeserver.log" 2&gt;&amp;1
+"${installdir}/platform/nssm/nssm.exe" set LogiApplicationService DisplayName "Logi Application Service" &gt;&gt; "${installdir}/platform/nssm/nssmnodeserver.log" 2&gt;&amp;1 </text>
+                </writeFile>
+                <writeFile>
+                    <path>${installdir}/platform/web-server/nssmnodeserver.bat</path>
+                    <text>SET LOGI_HOME=${installdir}
+SET path=%LOGI_HOME%\platform\nodejs;%path%
+node logiApplicationService.js</text>
+                </writeFile>
+                <writeFile>
+                    <path>${installdir}/platform/extensions/analysis-components/client/themeSource/prebuild.bat</path>
+                    <text>SET LOGI_HOME=${installdir}
+SET path=%LOGI_HOME%\platform\nodejs;%path%
+CMD /C npm install shelljs
+CMD /C npm install less less-plugin-autoprefix --prefix %LOGI_HOME%\platform\extensions\analysis-components\client\themeSource\src</text>
+                    <ruleList>
+                        <fileTest condition="exists" path="${installdir}\platform\extensions\analysis-components\client\themeSource"/>
+                    </ruleList>
+                </writeFile>
+                <writeFile>
+                    <path>${installdir}/platform/extensions/analysis-components/client/themeSource/build.bat</path>
+                    <text>SET LOGI_HOME=${installdir}
+SET path=%LOGI_HOME%\platform\nodejs;%LOGI_HOME%\platform\extensions\analysis-components\client\themeSource\src\node_modules\bin;%path%
+node build-themes.js </text>
+                    <ruleList>
+                        <fileTest condition="exists" path="${installdir}\platform\extensions\analysis-components\client\themeSource"/>
+                    </ruleList>
+                </writeFile>
+                <writeFile>
+                    <path>${installdir}/platform/nssm/install-ds-win-service.bat</path>
+                    <text>"${installdir}/platform/nssm/nssm.exe" install LogiDataService "${installdir}/platform/ds/server/nssmdsserver.bat" &gt;&gt; "${installdir}/platform/nssm/nssmdsserver.log" 2&gt;&amp;1
+"${installdir}/platform/nssm/nssm.exe" set LogiDataService DisplayName "Logi Data Service" &gt;&gt; "${installdir}/platform/nssm/nssmdsserver.log" 2&gt;&amp;1 </text>
+                </writeFile>
+                <writeFile>
+                    <path>${installdir}/platform/ds/server/nssmdsserver.bat</path>
+                    <text>set LOGI_HOME=${installdir}
+set JAVA_HOME="${installdir}/platform/java/jre1.8.0_102"
+SET path=%LOGI_HOME%\platform\nodejs;%path%
+node logiDataService.js
+ </text>
+                    <ruleList>
+                        <isTrue value="${bundle_java}"/>
+                    </ruleList>
+                </writeFile>
+                <writeFile>
+                    <path>${installdir}/platform/ds/server/nssmdsserver.bat</path>
+                    <text>set LOGI_HOME=${installdir}
+set JAVA_HOME=${java_home}
+SET path=%LOGI_HOME%\platform\nodejs;%path%
+node logiDataService.js
+ </text>
+                    <ruleList>
+                        <isFalse value="${bundle_java}"/>
+                    </ruleList>
+                </writeFile>
+                <writeFile>
+                    <path>${installdir}/platform/nssm/keygen.bat</path>
+                    <text>@echo off
+REM Key generator for NGP
+
+set CJAR="${installdir}\platform\nssm\lib\commons-cli-1.3.1.jar"
+set GJAR="${installdir}\platform\nssm\lib\gson-2.3.1.jar"
+set KJAR="${installdir}\platform\nssm\lib\keygen-1.0.0.jar"
+set JAVA_HOME=${installdir}/platform/java/jre1.8.0_102
+SET LOGI_HOME=${installdir}
+
+"%JAVA_HOME%\bin\java.exe" -cp %CJAR%;%GJAR%;%KJAR% com.logi.ds.KeyGen %*
+</text>
+                    <ruleList>
+                        <isTrue>
+                            <value>${bundle_java}</value>
+                        </isTrue>
+                    </ruleList>
+                </writeFile>
+                <writeFile>
+                    <path>${installdir}/platform/nssm/keygen.bat</path>
+                    <text>@echo off
+REM Key generator for NGP
+
+set CJAR="${installdir}\platform\nssm\lib\commons-cli-1.3.1.jar"
+set GJAR="${installdir}\platform\nssm\lib\gson-2.3.1.jar"
+set KJAR="${installdir}\platform\nssm\lib\keygen-1.0.0.jar"
+set JAVA_HOME=${java_home}
+SET LOGI_HOME=${installdir}
+
+"%JAVA_HOME%\bin\java.exe" -cp %CJAR%;%GJAR%;%KJAR% com.logi.ds.KeyGen %*</text>
+                    <ruleList>
+                        <isFalse>
+                            <value>${bundle_java}</value>
+                        </isFalse>
+                    </ruleList>
+                </writeFile>
+                <runProgram>
+                    <program>${installdir}/platform/nssm/keygen.bat</program>
+                    <programArguments>keygen.bat  -alg aes -default -install</programArguments>
+                </runProgram>
+                <substitute>
+                    <files>${installdir}/platform/bin/logiconfig.bat</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>@@INSTALLDIR@@</pattern>
+                            <value>${installdir}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@JAVADIR@@</pattern>
+                            <value>${installdir}/platform/java/jre1.8.0_102</value>
+                            <ruleList>
+                                <isTrue value="${bundle_java}"/>
+                            </ruleList>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@JAVADIR@@</pattern>
+                            <value>${java_home}</value>
+                            <ruleList>
+                                <isFalse value="${bundle_java}"/>
+                            </ruleList>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@NODEDIR@@</pattern>
+                            <value>${installdir}/platform/nodejs</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <substitute>
+                    <files>${installdir}/platform/settings/logiDataService.json</files>
+                    <type>regexp</type>
+                    <ruleList>
+                        <fileTest>
+                            <condition>not_exists</condition>
+                            <path>${installdir}/uninstall.exe</path>
+                        </fileTest>
+                    </ruleList>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>"systemUserPassword": "password"</pattern>
+                            <value>"systemUserPassword": "${Userpasswd}"</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>"systemPassword": "password"</pattern>
+                            <value>"systemPassword": "${Userpasswd}"</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>"displayName": "DataServices Administrator"</pattern>
+                            <value>"displayName": "${firstname} ${lastname}"</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>"firstName": "DataServices"</pattern>
+                            <value>"firstName": "${firstname}"</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>"lastName": "Administrator"</pattern>
+                            <value>"lastName": "${lastname}"</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>"email": "dataservices.admin@domain.com"</pattern>
+                            <value>"email": "${email}"</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <actionGroup>
+                    <abortOnError>0</abortOnError>
+                    <actionList>
+                        <writeFile>
+                            <abortOnError>0</abortOnError>
+                            <path>${installdir}\logiTrial03.lic</path>
+                            <text>{
+  "LicenseFile": {
+    "Version": "3",
+    "Product": { "Name": "Logi Discovery" },
+    "Customer": {
+      "Name": "Logi Analytics",
+      "Email": "${email}",
+      "Contact": "${firstname} ${lastname}"
+    },
+    "License": {
+      "ComputerName": "name of the computer",
+      "CountUniqueUsers": "False",
+      "ExpirationDate": "current date + 14 days",
+      "LicenseKey": "030504_96O231_Trial_Key_",
+      "AssignmentKey": "6312-E2674-ABE6-FDF2B-5770-6E43F"
+    }
+  }
+ }</text>
+                        </writeFile>
+                        <writeFile>
+                            <path>${installdir}\platform\bin\writelicense.js</path>
+                            <text>var fs = require('fs');
+var os = require('os')
+var path = require('path');
+var LOGI_HOME = process.env.LOGI_HOME;
+var crypto = require('crypto');
+var srcPath = path.join(LOGI_HOME, 'logiTrial03.lic');
+var computername = os.hostname();
+
+//date function to get custom date 
+function timestamp(){
+	function pad(n) {return n&lt;10 ? "0"+n : n}
+	var d = new Date(); 
+	d.setDate(d.getDate() + 14);
+	var dash = "-";
+	var colon = ":";
+	return d.getFullYear()+dash+
+	pad(d.getMonth()+1)+dash+
+	pad(d.getDate())
+}
+var date = timestamp();
+var date_format = date.replace(/(\d{4})-(\d{2})-(\d{2})/g, '$1$2$3');
+
+var licenseKey = "030504_96O231_Trial_Key_"+date_format+computername;
+var hash = crypto.createHash('md5').update(licenseKey).digest('hex');
+hash = hash.toUpperCase();
+hash = hash.substr(0, 4) + "-" + hash.substr(5, 5) + "-" + hash.substr(11, 4) + "-" + hash.substr(16, 5) + "-" + hash.substr(22, 4) + "-" + hash.substr(27);
+
+//function to write to the license file.
+fs.readFile(srcPath, 'utf8', function (err,data) {
+	if (err) {
+		console.log('error', err);
+		}	
+		var readData = data;
+		var writeComputerName = readData.replace(/("ComputerName"\s*:\s*")([^"]+)(")/g, '$1'+computername+'$3');
+		var writeExpireDate = writeComputerName.replace(/("ExpirationDate"\s*:\s*")([^"]+)(")/g, '$1'+date+'$3');
+		var  writeLicenseKey = writeExpireDate.replace(/("LicenseKey"\s*:\s*")([^"]+)(")/g, '$1030504_96O231_Trial_Key_'+date_format+'$3')
+		var writeAssignmentKey = writeLicenseKey.replace(/("AssignmentKey"\s*:\s*")([^"]+)(")/g, '$1'+hash+'$3');
+		fs.writeFile(srcPath, writeAssignmentKey, 'utf8', function (err) {
+			if (err) 
+				console.log('error', err);
+			else {
+				console.log("successfully created.");
+			}
+			});
+});
+</text>
+                        </writeFile>
+                        <writeFile>
+                            <path>${installdir}\platform\bin\writelicense.bat</path>
+                            <text>@ECHO OFF
+
+
+call logiconfig.bat
+
+IF DEFINED LOGI_HOME (
+   echo "LOGI_HOME: %LOGI_HOME%"
+) ELSE (
+         echo The LOGI_HOME environment variable is not defined correctly.
+         echo It is needed to run Logi Data Services.
+
+         goto exit
+)
+
+
+IF DEFINED NODE_HOME ( 
+  SET "PATH=%NODE_HOME%;%PATH%"
+)ELSE (
+         echo The NODE_HOME environment variable is not defined correctly.
+         echo It is needed to run Logi Data Services.
+
+         goto exit
+)
+
+if exist "%LOGI_HOME%\platform\bin\logiconfig.bat" goto checknode
+echo The LOGI_HOME environment variable is not defined correctly.
+echo It is needed to run Logi Data Services.
+
+goto exit
+
+:checknode
+
+if exist "%NODE_HOME%\node.exe" goto okNode
+echo The NODE_HOME environment variable is not defined correctly.
+echo It is needed to run Logi Data Services.
+
+goto exit
+:okNode
+node "%LOGI_HOME%\platform\bin\writelicense.js"
+
+
+:exit
+exit /b %errorlevel% </text>
+                        </writeFile>
+                        <runProgram>
+                            <abortOnError>0</abortOnError>
+                            <program>${installdir}\platform\bin\writelicense.bat</program>
+                            <programArguments></programArguments>
+                        </runProgram>
+                        <deleteFile>
+                            <abortOnError>0</abortOnError>
+                            <path>${installdir}\platform\bin\writelicense.js</path>
+                        </deleteFile>
+                        <deleteFile>
+                            <abortOnError>0</abortOnError>
+                            <path>${installdir}\platform\bin\writelicense.bat</path>
+                        </deleteFile>
+                    </actionList>
+                </actionGroup>
+                <runProgram>
+                    <program>${installdir}/platform/nssm/install-ds-win-service.bat</program>
+                    <programArguments></programArguments>
+                </runProgram>
+                <runProgram>
+                    <program>${installdir}/platform/nssm/install-app-win-service.bat</program>
+                    <programArguments></programArguments>
+                </runProgram>
+                <startWindowsService>
+                    <delay>45000</delay>
+                    <displayName></displayName>
+                    <serviceName>LogiDataService</serviceName>
+                </startWindowsService>
+                <setInstallerVariable name="time" value="0"/>
+                <while>
+                    <actionList>
+                        <!-- Break the loop if port is freed -->
+                        <break>
+                            <ruleList>
+                                <windowsServiceTest condition="is_running" service="LogiDataService"/>
+                            </ruleList>
+                        </break>
+
+                        <!-- Wait a second to avoid using too much cpu -->
+                        <wait ms="1000"/>
+                        <mathExpression>
+                            <text>${time}+1000</text>
+                            <variable>time</variable>
+                        </mathExpression>
+                    </actionList>
+                    <conditionRuleList>
+                        <!-- Iterate until the timeout reach 30 sec (30000msec) -->
+                        <compareValues>
+                            <logic>less_or_equal</logic>
+                            <value1>${time}</value1>
+                            <value2>60000</value2>
+                        </compareValues>
+                    </conditionRuleList>
+                </while>
+                <startWindowsService>
+                    <delay>45000</delay>
+                    <displayName></displayName>
+                    <serviceName>LogiApplicationService</serviceName>
+                </startWindowsService>
+                <actionGroup>
+                    <actionList>
+                        <registrySet>
+                            <key>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\${project.windowsARPRegistryPrefix}</key>
+                            <name>Publisher</name>
+                            <type>REG_SZ</type>
+                            <value>Logi Analytics,Inc</value>
+                        </registrySet>
+                    </actionList>
+                </actionGroup>
+                <wait>
+                    <ms>55000</ms>
+                </wait>
+                <actionGroup>
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>0</showMessageOnError>
+                    <actionList>
+                        <runProgram>
+                            <program>${installdir}/platform/bin/licenseImportTool.bat</program>
+                            <programArguments>--username=admin --password=${Userpasswd.password}</programArguments>
+                            <ruleList>
+                                <fileExists>
+                                    <path>${installdir}\logiTrial03.lic</path>
+                                </fileExists>
+                            </ruleList>
+                        </runProgram>
+                        <runProgram>
+                            <program>${installdir}/platform/bin/clientSecret.bat</program>
+                            <programArguments>--username=admin --password=${Userpasswd.password}</programArguments>
+                        </runProgram>
+                        <runProgram>
+                            <program>${installdir}\platform\bin\setDefaultPermissions.bat</program>
+                            <programArguments>--username=admin --password=${Userpasswd.password}</programArguments>
+                        </runProgram>
+                        <runProgram>
+                            <program>${installdir}/platform/bin/authorizationImportTool.bat</program>
+                            <programArguments> --user=admin --password=${Userpasswd.password} --authorization_file=${installdir}\platform\authorizationImport-examples\syspublic-authorization.xlsx</programArguments>
+                        </runProgram>
+                    </actionList>
+                    <onErrorActionList>
+                        <setInstallerVariable>
+                            <name>installerError</name>
+                            <value>1</value>
+                        </setInstallerVariable>
+                    </onErrorActionList>
+                </actionGroup>
+                <restartWindowsService>
+                    <delay>45000</delay>
+                    <displayName></displayName>
+                    <serviceName>LogiDataService</serviceName>
+                </restartWindowsService>
+                <setInstallerVariable name="time" value="0"/>
+                <while>
+                    <actionList>
+                        <!-- Break the loop if port is freed -->
+                        <break>
+                            <ruleList>
+                                <windowsServiceTest condition="is_running" service="LogiDataService"/>
+                            </ruleList>
+                        </break>
+
+                        <!-- Wait a second to avoid using too much cpu -->
+                        <wait ms="1000"/>
+                        <mathExpression>
+                            <text>${time}+1000</text>
+                            <variable>time</variable>
+                        </mathExpression>
+                    </actionList>
+                    <conditionRuleList>
+                        <!-- Iterate until the timeout reach 30 sec (30000msec) -->
+                        <compareValues>
+                            <logic>less_or_equal</logic>
+                            <value1>${time}</value1>
+                            <value2>60000</value2>
+                        </compareValues>
+                    </conditionRuleList>
+                </while>
+                <restartWindowsService>
+                    <delay>45000</delay>
+                    <displayName></displayName>
+                    <serviceName>LogiApplicationService</serviceName>
+                </restartWindowsService>
+                <actionGroup>
+                    <abortOnError>0</abortOnError>
+                    <actionList>
+                        <showQuestion>
+                            <abortOnError>0</abortOnError>
+                            <default>yes</default>
+                            <text>Microsoft 2010 redistributable is required for certain features to work properly. Click yes to install.</text>
+                            <variable>install2010</variable>
+                        </showQuestion>
+                        <runProgram>
+                            <abortOnError>0</abortOnError>
+                            <program>${installdir}\platform\thirdparty-executables\vcredist_x64.exe</program>
+                            <programArguments></programArguments>
+                            <ruleList>
+                                <isTrue>
+                                    <value>${install2010}</value>
+                                </isTrue>
+                            </ruleList>
+                        </runProgram>
+                    </actionList>
+                    <ruleList>
+                        <registryTest>
+                            <key>HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Installer\Products\1926E8D15D0BCE53481466615F760A7F</key>
+                            <logic>is_empty</logic>
+                            <name>visual 2010 redistributable</name>
+                        </registryTest>
+                    </ruleList>
+                </actionGroup>
+                <removeFilesFromUninstaller files="${installdir}/db/*"/>
+                <removeFilesFromUninstaller files="${installdir}/db/sql/*"/>
+                <deleteFile path="${project.rollbackBackupDirectory}"/>
+            </postInstallationActionList>
+            <postUninstallationActionList>
+                <deleteWindowsService>
+                    <displayName></displayName>
+                    <serviceName>LogiApplicationService</serviceName>
+                </deleteWindowsService>
+                <deleteWindowsService>
+                    <displayName></displayName>
+                    <serviceName>LogiDataService</serviceName>
+                </deleteWindowsService>
+                <showQuestion text="Do you want the uninstallation to also remove the logs and database data?" variable="remove_logs_data">
+                    <default>no</default>
+                </showQuestion>
+                <deleteFile>
+                    <path>${installdir}/platform</path>
+                    <ruleList>
+                        <compareText logic="equals" text="${remove_logs_data}" value="yes"/>
+                    </ruleList>
+                </deleteFile>
+            </postUninstallationActionList>
+            <postUninstallerCreationActionList>
+                <actionGroup>
+                    <actionList>
+                        <showWarning>
+                            <text>An error has prevented the completion of the installation. Please click finish and get more details in the readme file (${installdir}\readme.txt).</text>
+                        </showWarning>
+                        <writeFile>
+                            <path>${installdir}/readme.txt</path>
+                            <text>The installation completed with an error. 
+
+1. Verify that both the "Logi Data Service" and "Logi Application Service" are running.
+2. Check the logs to find more information:
+Install log: ${installdir}\LogiX-installlog.log
+Platform logs: ${installdir}\platform\logs
+
+Contact Support to troubleshoot the issue.
+
+Thank you.
+</text>
+                        </writeFile>
+                    </actionList>
+                    <ruleList>
+                        <isTrue>
+                            <value>${installerError}</value>
+                        </isTrue>
+                    </ruleList>
+                </actionGroup>
+            </postUninstallerCreationActionList>
+            <preUninstallationActionList>
+                <stopWindowsService>
+                    <delay>45000</delay>
+                    <displayName>LogiDataService</displayName>
+                    <serviceName>LogiDataService</serviceName>
+                </stopWindowsService>
+                <stopWindowsService>
+                    <delay>45000</delay>
+                    <displayName>LogiApplicationService</displayName>
+                    <serviceName>LogiApplicationService</serviceName>
+                </stopWindowsService>
+                <deleteFile path="${installdir}/platform/extensions"/>
+                <deleteFile path="${installdir}/platform/web-server"/>
+                <deleteFile path="${installdir}/platform/ds"/>
+                <deleteFile path="${installdir}/platform/nssm"/>
+            </preUninstallationActionList>
+            <startMenuShortcutList>
+                <startMenuShortcut>
+                    <comment>Uninstall ${product_fullname}</comment>
+                    <name>Uninstall ${product_fullname}</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon></windowsIcon>
+                    <windowsPath>${installdir}/</windowsPath>
+                </startMenuShortcut>
+            </startMenuShortcutList>
+        </component>
+        <component>
+            <name>upgrade</name>
+            <description>Upgrade Component</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>0</selected>
+            <show>0</show>
+            <folderList>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfiles</name>
+                    <platforms>all</platforms>
+                    <shortcutList>
+                        <shortcut>
+                            <comment>Uninstall</comment>
+                            <exec>${installdir}/${uninstallerName}</exec>
+                            <icon></icon>
+                            <name>Uninstall ${product_fullname}</name>
+                            <path>${installdir}</path>
+                            <platforms>all</platforms>
+                            <runAsAdmin>0</runAsAdmin>
+                            <runInTerminal>0</runInTerminal>
+                            <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                            <windowsExecArgs></windowsExecArgs>
+                            <windowsIcon></windowsIcon>
+                            <windowsPath>${installdir}</windowsPath>
+                        </shortcut>
+                    </shortcutList>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}/platform</destination>
+                    <name>programfileswindows</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <allowWildcards>1</allowWildcards>
+                            <origin>../output/platform/extensions</origin>
+                            <onPackingFilterList>
+                                <fileNameFilter logic="does_not_match" pattern="*.bat"/>
+                            </onPackingFilterList>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/examples</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/authorizationImport-examples</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/lib</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <allowWildcards>1</allowWildcards>
+                            <origin>../output/platform/web-server</origin>
+                            <onPackingFilterList>
+                                <fileNameFilter logic="does_not_match" pattern="*.bat"/>
+                            </onPackingFilterList>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/ds</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/schemata</origin>
+                        </distributionDirectory>
+                        <distributionFile>
+                            <origin>../output/platform/version.txt</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <destination>${installdir}</destination>
+                    <name>ngpicon</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>supportfiles/platformdiscovery.ico</origin>
+                        </distributionFile>
+
+                        <!--       <distributionFile allowWildcards="1">
+                            <origin>../output/platform/as.v.*</origin>
+                        </distributionFile>
+                        <distributionFile allowWildcards="1">
+                            <origin>../output/platform/ds.v.*</origin>
+                        </distributionFile> -->
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <postInstallationActionList>
+                <readFile>
+                    <abortOnError>0</abortOnError>
+                    <name>datahubclientsecret</name>
+                    <path>${installdir}\platform\extensions\datahub\config.json.backup</path>
+                </readFile>
+                <setInstallerVariableFromRegEx>
+                    <abortOnError>0</abortOnError>
+                    <name>datahubconfig</name>
+                    <pattern>.*("clientSecret"\s*:\s*"[^"]+").*</pattern>
+                    <substitution>\1</substitution>
+                    <text>${datahubclientsecret}</text>
+                </setInstallerVariableFromRegEx>
+                <substitute>
+                    <abortOnError>0</abortOnError>
+                    <files>${installdir}\platform\extensions\datahub\config.json</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>"clientSecret"\s*:\s*"[^"]+"</pattern>
+                            <value>${datahubconfig}</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <readFile>
+                    <abortOnError>0</abortOnError>
+                    <name>webclientsecret</name>
+                    <path>${installdir}\platform\web-server\config.json.backup</path>
+                </readFile>
+                <setInstallerVariableFromRegEx>
+                    <abortOnError>0</abortOnError>
+                    <name>webconfig</name>
+                    <pattern>.*("clientSecret"\s*:\s*"[^"]+").*</pattern>
+                    <substitution>\1</substitution>
+                    <text>${webclientsecret}</text>
+                </setInstallerVariableFromRegEx>
+                <substitute>
+                    <abortOnError>0</abortOnError>
+                    <files>${installdir}\platform\web-server\config.json</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>"clientSecret"\s*:\s*"[^"]+"</pattern>
+                            <value>${webconfig}</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <startWindowsService>
+                    <delay>45000</delay>
+                    <displayName></displayName>
+                    <serviceName>LogiDataService</serviceName>
+                </startWindowsService>
+                <setInstallerVariable name="time" value="0"/>
+                <while>
+                    <actionList>
+                        <!-- Break the loop if port is freed -->
+                        <break>
+                            <ruleList>
+                                <windowsServiceTest condition="is_running" service="LogiDataService"/>
+                            </ruleList>
+                        </break>
+
+                        <!-- Wait a second to avoid using too much cpu -->
+                        <wait ms="1000"/>
+                        <mathExpression>
+                            <text>${time}+1000</text>
+                            <variable>time</variable>
+                        </mathExpression>
+                    </actionList>
+                    <conditionRuleList>
+                        <!-- Iterate until the timeout reach 30 sec (30000msec) -->
+                        <compareValues>
+                            <logic>less_or_equal</logic>
+                            <value1>${time}</value1>
+                            <value2>60000</value2>
+                        </compareValues>
+                    </conditionRuleList>
+                </while>
+                <startWindowsService>
+                    <delay>45000</delay>
+                    <displayName></displayName>
+                    <serviceName>LogiApplicationService</serviceName>
+                </startWindowsService>
+                <deleteFile path="${project.rollbackBackupDirectory}"/>
+                <deleteFile>
+                    <abortOnError>0</abortOnError>
+                    <path>${installdir}\platform\extensions\datahub\config.json.backup</path>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\platform\extensions\datahub\config.json.backup</path>
+                        </fileExists>
+                    </ruleList>
+                </deleteFile>
+                <deleteFile>
+                    <abortOnError>0</abortOnError>
+                    <path>${installdir}\platform\web-server\config.json.backup</path>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\platform\web-server\config.json.backup</path>
+                        </fileExists>
+                    </ruleList>
+                </deleteFile>
+            </postInstallationActionList>
+            <postUninstallationActionList>
+                <deleteWindowsService>
+                    <displayName></displayName>
+                    <serviceName>LogiApplicationService</serviceName>
+                </deleteWindowsService>
+                <deleteWindowsService>
+                    <displayName></displayName>
+                    <serviceName>LogiDataService</serviceName>
+                </deleteWindowsService>
+                <showQuestion text="Do you want the uninstallation to also remove the logs and database data?" variable="remove_logs_data">
+                    <default>no</default>
+                </showQuestion>
+                <deleteFile>
+                    <path>${installdir}/platform</path>
+                    <ruleList>
+                        <compareText logic="equals" text="${remove_logs_data}" value="yes"/>
+                    </ruleList>
+                </deleteFile>
+            </postUninstallationActionList>
+            <preUninstallationActionList>
+                <stopWindowsService>
+                    <delay>45000</delay>
+                    <displayName>LogiDataService</displayName>
+                    <serviceName>LogiDataService</serviceName>
+                </stopWindowsService>
+                <stopWindowsService>
+                    <delay>45000</delay>
+                    <displayName>LogiApplicationService</displayName>
+                    <serviceName>LogiApplicationService</serviceName>
+                </stopWindowsService>
+                <deleteFile path="${installdir}/platform/examples"/>
+                <deleteFile path="${installdir}/platform/authorizationImport-examples"/>
+                <deleteFile path="${installdir}/platform/lib"/>
+                <deleteFile path="${installdir}/platform/extensions"/>
+                <deleteFile path="${installdir}/platform/web-server"/>
+                <deleteFile path="${installdir}/platform/ds"/>
+                <deleteFile path="${installdir}/platform/bin"/>
+                <deleteFile path="${installdir}/platform/cache"/>
+                <deleteFile path="${installdir}/platform/java"/>
+                <deleteFile path="${installdir}/platform/licenses"/>
+                <deleteFile path="${installdir}/platform/nodejs"/>
+                <deleteFile path="${installdir}/platform/settings"/>
+                <deleteFile path="${installdir}/platform/nssm"/>
+                <deleteFile>
+                    <path>${installdir}/platform/connection</path>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}/platform/ds-extensions</path>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}/platform/linux-init-scripts</path>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}/platform/thirdparty-executables</path>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}/platform/ssl</path>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}/platform/db/*.*</path>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}/platform/db/sql</path>
+                </deleteFile>
+            </preUninstallationActionList>
+            <readyToInstallActionList>
+                <copyFile>
+                    <destination>${installdir}\platform\extensions\datahub\config.json.backup</destination>
+                    <origin>${installdir}\platform\extensions\datahub\config.json</origin>
+                </copyFile>
+                <copyFile>
+                    <destination>${installdir}\platform\web-server\config.json.backup</destination>
+                    <origin>${installdir}\platform\web-server\config.json</origin>
+                </copyFile>
+            </readyToInstallActionList>
+        </component>
+    </componentList>
+    <initializationActionList>
+        <logMessage>
+            <abortOnError>0</abortOnError>
+            <enableTimeStamp>0</enableTimeStamp>
+            <text>Version:- ${product_version}</text>
+        </logMessage>
+        <registryGet>
+            <key>HKEY_LOCAL_MACHINE\Software\${project.windowsSoftwareRegistryPrefix}</key>
+            <name>Location</name>
+            <variable>installdir</variable>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </registryGet>
+        <createTimeStamp>
+            <format>%Y%m%d%H%M%S</format>
+            <variable>timestamp</variable>
+        </createTimeStamp>
+    </initializationActionList>
+    <preInstallationActionList>
+        <autodetectJava>
+            <abortOnError>0</abortOnError>
+            <promptUser>0</promptUser>
+            <showMessageOnError>0</showMessageOnError>
+            <validVersionList>
+                <validVersion>
+                    <bitness>64</bitness>
+                    <maxVersion></maxVersion>
+                    <minVersion>1.8</minVersion>
+                    <requireJDK>0</requireJDK>
+                    <vendor></vendor>
+                </validVersion>
+            </validVersionList>
+        </autodetectJava>
+        <dirName path="${java_executable}" variable="java_bin_dir"/>
+        <dirName path="${java_bin_dir}" variable="java_home"/>
+        <setInstallerVariableFromRegEx>
+            <name>java_home</name>
+            <pattern>/</pattern>
+            <substitution>\</substitution>
+            <text>${java_home}</text>
+        </setInstallerVariableFromRegEx>
+        <setWindowsACL>
+            <action>allow</action>
+            <files>${installdir}/*</files>
+        </setWindowsACL>
+
+        <!--<showInfo text="JAVA ${java_autodetected}"/>-->
+        <componentSelection>
+            <deselect>default</deselect>
+            <select>upgrade</select>
+            <ruleList>
+                <fileExists path="${installdir}/uninstall.exe"/>
+            </ruleList>
+        </componentSelection>
+        <actionGroup>
+            <actionList>
+                <!-- <showInfo>
+                    <text>An existing installation has been detected in ${installdir}.</text>
+                </showInfo>-->
+                <showQuestion>
+                    <default>yes</default>
+                    <text>A version of the Discovery module is already installed in ${installdir}. Would you like to upgrade to current version ${project.version}?
+Please note, clicking on Yes and then cancelling later will result in a corrupted Installer.</text>
+                    <title>Discovery Module Upgrade</title>
+                    <variable>shouldupgrade</variable>
+                </showQuestion>
+                <exit>
+                    <exitCode>1</exitCode>
+                    <ruleList>
+                        <isFalse>
+                            <value>${shouldupgrade}</value>
+                        </isFalse>
+                    </ruleList>
+                </exit>
+                <setInstallerVariable name="project.parameter(installdir).ask" value="0"/>
+            </actionList>
+
+            <!-- Assume an existing installation if ${installdir} directory exists -->
+            <ruleList>
+                <fileExists path="${installdir}/uninstall.exe"/>
+
+                <!-- <fileTest condition="exists" path="${installdir}"/>-->
+            </ruleList>
+        </actionGroup>
+    </preInstallationActionList>
+    <readyToInstallActionList>
+        <!-- stop application services windows service -->
+        <stopWindowsService>
+            <abortOnError>1</abortOnError>
+            <delay>15000</delay>
+            <displayName></displayName>
+            <serviceName>LogiApplicationService</serviceName>
+            <ruleList>
+                <windowsServiceTest>
+                    <condition>exists</condition>
+                    <service>LogiApplicationService</service>
+                </windowsServiceTest>
+                <windowsServiceTest>
+                    <condition>is_running</condition>
+                    <service>LogiApplicationService</service>
+                </windowsServiceTest>
+                <fileExists path="${installdir}/uninstall.exe"/>
+            </ruleList>
+        </stopWindowsService>
+
+        <!-- stop data services windows service -->
+        <stopWindowsService>
+            <abortOnError>1</abortOnError>
+            <delay>15000</delay>
+            <displayName></displayName>
+            <serviceName>LogiDataService</serviceName>
+            <ruleList>
+                <windowsServiceTest>
+                    <condition>exists</condition>
+                    <service>LogiDataService</service>
+                </windowsServiceTest>
+                <windowsServiceTest>
+                    <condition>is_running</condition>
+                    <service>LogiDataService</service>
+                </windowsServiceTest>
+                <fileExists path="${installdir}/uninstall.exe"/>
+            </ruleList>
+        </stopWindowsService>
+
+        <!--    <deleteFile>
+            <path>${installdir}/as.v.*</path>
+            <ruleList>
+                <fileExists path="${installdir}/uninstall.exe"/>
+            </ruleList>
+        </deleteFile>
+        <deleteFile>
+            <path>${installdir}/ds.v.*</path>
+            <ruleList>
+                <fileExists path="${installdir}/uninstall.exe"/>
+            </ruleList>
+        </deleteFile>
+ Add the files installed by the previous
+        installation to the uninstaller -->
+        <addDirectoriesToUninstaller>
+            <addContents>1</addContents>
+            <files>${installdir}/extensions;${installdir}/web-server;${installdir}/ds;${installdir}/settings;${installdir}/bin;${installdir}/cache;;${installdir}/licenses;${installdir}/nodejs;${installdir}/nssm;${installdir}/java</files>
+            <matchHiddenFiles>1</matchHiddenFiles>
+            <ruleList>
+                <fileExists path="${installdir}/uninstall.exe"/>
+            </ruleList>
+        </addDirectoriesToUninstaller>
+        <actionGroup>
+            <actionList>
+                <registryGet>
+                    <key>HKEY_LOCAL_MACHINE\Software\${project.windowsSoftwareRegistryPrefix}</key>
+                    <name>Version</name>
+                    <variable>oldVersion</variable>
+                </registryGet>
+
+                <!-- Delete the old ARP registry keys -->
+                <registryDelete>
+                    <key>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${project.fullName} ${oldVersion}</key>
+                    <name></name>
+                </registryDelete>
+                <registryDelete>
+                    <key>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Management\ARPCache\${project.fullName} ${oldVersion}</key>
+                    <name></name>
+                </registryDelete>
+            </actionList>
+            <ruleList>
+                <platformTest type="windows"/>
+
+                <!--<isTrue value="${isUpgradeMode}"/>-->
+                <fileExists path="${installdir}/uninstall.exe"/>
+            </ruleList>
+        </actionGroup>
+    </readyToInstallActionList>
+    <enableRollback>1</enableRollback>
+    <enableTimestamp>1</enableTimestamp>
+    <height>420</height>
+
+    <!-- Configures the final destination of the installation log -->
+    <installationLogFile>${installdir}/${project.shortName}-${product_version}-installLog.log</installationLogFile>
+
+    <!--<installationType>upgrade</installationType>-->
+    <licenseFileEncoding>utf-8</licenseFileEncoding>
+    <productDisplayIcon>${installdir}/platformdiscovery.ico</productDisplayIcon>
+    <readmeFileEncoding>utf-8</readmeFileEncoding>
+    <requireInstallationByRootUser>1</requireInstallationByRootUser>
+    <rollbackBackupDirectory>${system_temp_directory}/backup</rollbackBackupDirectory>
+    <saveRelativePaths>1</saveRelativePaths>
+    <showFileUnpackingProgress>0</showFileUnpackingProgress>
+    <signWindowsUninstaller>1</signWindowsUninstaller>
+
+    <!-- Configures the final destination of the uninstallation log -->
+    <uninstallationLogFile>${system_temp_directory}/${project.shortName}-uninstallation-${timestamp}.log</uninstallationLogFile>
+    <vendor>LogiAnalytics</vendor>
+    <width>600</width>
+    <windows64bitMode>1</windows64bitMode>
+    <windowsExecutableIcon>supportfiles/platformdiscovery.ico</windowsExecutableIcon>
+    <windowsSigningPkcs12File>supportfiles/logi.pfx</windowsSigningPkcs12File>
+    <windowsSigningPkcs12Password>logipass</windowsSigningPkcs12Password>
+    <windowsSigningTimestampServer>http://timestamp.digicert.com</windowsSigningTimestampServer>
+    <windowsUninstallerExecutableIcon>supportfiles/platformdiscovery.ico</windowsUninstallerExecutableIcon>
+    <customLanguageFileList>
+        <language>
+            <code>en</code>
+            <file>supportfiles/discovery_en.lng</file>
+        </language>
+    </customLanguageFileList>
+    <finalPageActionList>
+        <actionGroup>
+            <progressText>Do you want to open the readme file</progressText>
+            <actionList>
+                <readFile>
+                    <name>text</name>
+                    <path>${installdir}/readme.txt</path>
+                </readFile>
+                <showText>
+                    <height>500</height>
+                    <text>${text}</text>
+                    <title>README</title>
+                    <width>600</width>
+                </showText>
+            </actionList>
+            <ruleList>
+                <isTrue>
+                    <value>${installerError}</value>
+                </isTrue>
+            </ruleList>
+        </actionGroup>
+    </finalPageActionList>
+    <installationAbortedActionList>
+        <actionGroup>
+            <abortOnError>0</abortOnError>
+            <actionList>
+                <stopWindowsService>
+                    <delay>15000</delay>
+                    <displayName>LogiDataService</displayName>
+                    <serviceName>LogiDataService</serviceName>
+                    <showMessageOnError>0</showMessageOnError>
+                </stopWindowsService>
+                <stopWindowsService>
+                    <delay>15000</delay>
+                    <displayName>LogiApplicationService</displayName>
+                    <serviceName>LogiApplicationService</serviceName>
+                    <showMessageOnError>0</showMessageOnError>
+                </stopWindowsService>
+                <deleteWindowsService>
+                    <displayName></displayName>
+                    <serviceName>LogiApplicationService</serviceName>
+                    <showMessageOnError>0</showMessageOnError>
+                </deleteWindowsService>
+                <deleteWindowsService>
+                    <displayName></displayName>
+                    <serviceName>LogiDataService</serviceName>
+                    <showMessageOnError>0</showMessageOnError>
+                </deleteWindowsService>
+                <deleteFile>
+                    <abortOnError>0</abortOnError>
+                    <path>${installdir}/platform</path>
+                    <showMessageOnError>0</showMessageOnError>
+                </deleteFile>
+            </actionList>
+            <ruleList>
+                <fileTest>
+                    <condition>not_exists</condition>
+                    <path>${installdir}/uninstall.exe</path>
+                </fileTest>
+            </ruleList>
+        </actionGroup>
+        <actionGroup>
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>0</showMessageOnError>
+            <actionList>
+                <deleteFile>
+                    <abortOnError>0</abortOnError>
+                    <path>${installdir}\platform\extensions\datahub\config.json.backup</path>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\platform\extensions\datahub\config.json.backup</path>
+                        </fileExists>
+                    </ruleList>
+                </deleteFile>
+                <deleteFile>
+                    <abortOnError>0</abortOnError>
+                    <path>${installdir}\platform\web-server\config.json.backup</path>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\platform\web-server\config.json.backup</path>
+                        </fileExists>
+                    </ruleList>
+                </deleteFile>
+                <startWindowsService>
+                    <delay>45000</delay>
+                    <displayName></displayName>
+                    <serviceName>LogiDataService</serviceName>
+                </startWindowsService>
+                <setInstallerVariable name="time" value="0"/>
+                <while>
+                    <actionList>
+                        <!-- Break the loop if port is freed -->
+                        <break>
+                            <ruleList>
+                                <windowsServiceTest condition="is_running" service="LogiDataService"/>
+                            </ruleList>
+                        </break>
+
+                        <!-- Wait a second to avoid using too much cpu -->
+                        <wait ms="1000"/>
+                        <mathExpression>
+                            <text>${time}+1000</text>
+                            <variable>time</variable>
+                        </mathExpression>
+                    </actionList>
+                    <conditionRuleList>
+                        <!-- Iterate until the timeout reach 30 sec (30000msec) -->
+                        <compareValues>
+                            <logic>less_or_equal</logic>
+                            <value1>${time}</value1>
+                            <value2>60000</value2>
+                        </compareValues>
+                    </conditionRuleList>
+                </while>
+                <startWindowsService>
+                    <delay>45000</delay>
+                    <displayName></displayName>
+                    <serviceName>LogiApplicationService</serviceName>
+                </startWindowsService>
+            </actionList>
+            <ruleList>
+                <fileExists>
+                    <path>${installdir}\uninstall.exe</path>
+                </fileExists>
+            </ruleList>
+        </actionGroup>
+    </installationAbortedActionList>
+    <parameterList>
+        <stringParameter name="as_ver" ask="0">
+            <description></description>
+            <explanation></explanation>
+            <value></value>
+            <default></default>
+            <allowEmptyValue>1</allowEmptyValue>
+            <width>40</width>
+        </stringParameter>
+        <stringParameter name="ds_ver" ask="0">
+            <description></description>
+            <explanation></explanation>
+            <value></value>
+            <default></default>
+            <allowEmptyValue>1</allowEmptyValue>
+            <width>40</width>
+        </stringParameter>
+        <licenseParameter>
+            <name>logi_license</name>
+            <title>Logi Analytics License Agreement</title>
+            <description>Please read the following License Agreement. You must accept the terms of this agreement before continuing with the installation.</description>
+            <explanation></explanation>
+            <file>License.txt</file>
+            <htmlFile></htmlFile>
+            <insertAfter>welcome</insertAfter>
+            <wrapText>1</wrapText>
+        </licenseParameter>
+        <directoryParameter>
+            <name>installdir</name>
+            <description>Installer.Parameter.installdir.description</description>
+            <explanation>Installer.Parameter.installdir.explanation</explanation>
+            <value></value>
+            <default>C:/LogiAnalytics/Discovery</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <cliOptionName>prefix</cliOptionName>
+            <insertBefore>readytoinstall</insertBefore>
+            <mustBeWritable>1</mustBeWritable>
+            <mustExist>0</mustExist>
+            <width>40</width>
+        </directoryParameter>
+        <choiceParameter>
+            <name>java_setup_type</name>
+            <title>Choice of Java JRE for Discovery Module.</title>
+            <description></description>
+            <explanation>The discovery module being installed requires version 1.8 of the Java runtime environment. We have detected that you already have Java 1.8 installed on this machine.
+
+You can choose to have discovery module use your existing installation of Java or have it install a bundled version of Java specifically for use with discovery module only.
+
+Logi Analytics recommends that you install the bundled version of the Java 1.8. runtime. If this option is chosen, you will be presented with a dialog showing a click through license from Oracle Corporation which you must accept. </explanation>
+            <value></value>
+            <default>bundlejre</default>
+            <allowEmptyValue>1</allowEmptyValue>
+            <displayType>radiobuttons</displayType>
+            <insertAfter>logi_license</insertAfter>
+            <ordering>default</ordering>
+            <width>40</width>
+            <optionList>
+                <option>
+                    <description></description>
+                    <image></image>
+                    <text>Install bundled Java 1.8 now, for use only with the Discovery Module.
+ </text>
+                    <value>bundlejre</value>
+                </option>
+                <option>
+                    <description>Your existing JRE will be used with Discovery Module.  Your existing JRE appears to be installed at &lt;JAVA_HOME&gt; : ${java_home}".</description>
+                    <image></image>
+                    <text>Use my existing Java 1.8 JRE for Discovery Module. JRE1.8.0_41 or later is required...</text>
+                    <value>defaultxyz</value>
+                </option>
+            </optionList>
+            <postShowPageActionList>
+                <if>
+                    <actionList>
+                        <setInstallerVariable>
+                            <name>bundle_java</name>
+                            <value>0</value>
+                            <ruleList>
+                                <compareValues>
+                                    <logic>equals</logic>
+                                    <value1>${java_setup_type}</value1>
+                                    <value2>defaultxyz</value2>
+                                </compareValues>
+                            </ruleList>
+                        </setInstallerVariable>
+                        <setInstallerVariable>
+                            <name>bundle_java</name>
+                            <value>1</value>
+                            <ruleList>
+                                <compareValues>
+                                    <logic>equals</logic>
+                                    <value1>${java_setup_type}</value1>
+                                    <value2>bundlejre</value2>
+                                </compareValues>
+                            </ruleList>
+                        </setInstallerVariable>
+                    </actionList>
+                </if>
+            </postShowPageActionList>
+            <ruleList>
+                <isTrue value="${java_autodetected}"/>
+                <isTrue value="${project.component(default).selected}"/>
+            </ruleList>
+        </choiceParameter>
+        <licenseParameter>
+            <name>java_license</name>
+            <title>Java License Agreement</title>
+            <description>Please read the following License Agreement. You must accept the terms of this agreement before continuing with the installation.</description>
+            <explanation></explanation>
+            <file>Licensejava.txt</file>
+            <htmlFile></htmlFile>
+            <insertBefore>installdir</insertBefore>
+            <wrapText>1</wrapText>
+            <ruleList>
+                <isTrue value="${bundle_java}"/>
+            </ruleList>
+        </licenseParameter>
+        <choiceParameter>
+            <name>install_java</name>
+            <title>Install Java JRE</title>
+            <description></description>
+            <explanation>The discovery module being installed requires version 1.8 of the Java runtime environment.  Java 1.8 does not appear to be installed on this machine.
+
+ Would you like the installer to continue and install it's bundled Java 8 for use only with Discovery module?
+
+Logi Analytics recommends that you install the bundled version of the Java 1.8. runtime. If this option is chosen, you will be presented with a dialog showing a click through license from Oracle Corporation which you must accept.
+ </explanation>
+            <value></value>
+            <default>bundlejava</default>
+            <allowEmptyValue>1</allowEmptyValue>
+            <displayType>radiobuttons</displayType>
+            <insertAfter>logi_license</insertAfter>
+            <ordering>default</ordering>
+            <width>40</width>
+            <optionList>
+                <option>
+                    <description></description>
+                    <image></image>
+                    <text>Yes, install bundled Java 1.8 now, for use only with the Discovery Module. </text>
+                    <value>bundlejava</value>
+                </option>
+                <option>
+                    <description></description>
+                    <image></image>
+                    <text>No, I'll download and Install Java 8 myself at later time.</text>
+                    <value>download</value>
+                </option>
+            </optionList>
+            <postShowPageActionList>
+                <if>
+                    <actionList>
+                        <setInstallerVariable>
+                            <name>bundle_java</name>
+                            <value>1</value>
+                            <ruleList>
+                                <compareValues>
+                                    <logic>equals</logic>
+                                    <value1>${install_java}</value1>
+                                    <value2>bundlejava</value2>
+                                </compareValues>
+                            </ruleList>
+                        </setInstallerVariable>
+                    </actionList>
+                </if>
+            </postShowPageActionList>
+            <ruleList>
+                <isFalse value="${java_autodetected}"/>
+                <isFalse value="${java_setup_page}"/>
+                <isTrue value="${project.component(default).selected}"/>
+            </ruleList>
+            <validationActionList>
+                <throwError>
+                    <text>Java JRE 8 is required to proceed with the installation. Please install it and relaunch this installer. For now, please select cancel to abort the installation.</text>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <value1>${install_java}</value1>
+                            <value2>download</value2>
+                        </compareValues>
+                    </ruleList>
+                </throwError>
+            </validationActionList>
+        </choiceParameter>
+        <parameterGroup>
+            <name>UserData</name>
+            <title>Logi Services Admin Credentials.</title>
+            <explanation>User Name :                    admin </explanation>
+            <value></value>
+            <default></default>
+            <parameterList>
+                <passwordParameter>
+                    <name>Userpasswd</name>
+                    <title>*Password :</title>
+                    <description>*Password :</description>
+                    <explanation>                                         Password must be between 6 to 50 characters.</explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <askForConfirmation>0</askForConfirmation>
+                    <descriptionRetype>*Confirm Password :</descriptionRetype>
+                    <width>40</width>
+                </passwordParameter>
+                <passwordParameter>
+                    <name>confirmpassword</name>
+                    <title>*Confirm Password :</title>
+                    <description>*Confirm Password :</description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <askForConfirmation>0</askForConfirmation>
+                    <descriptionRetype></descriptionRetype>
+                    <width>40</width>
+                </passwordParameter>
+                <stringParameter>
+                    <name>lastname</name>
+                    <title>*Last Name : </title>
+                    <description>*Last Name : </description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <width>40</width>
+                </stringParameter>
+                <stringParameter>
+                    <name>firstname</name>
+                    <title>*First Name :</title>
+                    <description>*First Name :</description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <width>40</width>
+                </stringParameter>
+                <stringParameter>
+                    <name>email</name>
+                    <title>*Email :</title>
+                    <description>*Email :</description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <width>40</width>
+                </stringParameter>
+            </parameterList>
+            <ruleList>
+                <fileTest>
+                    <condition>not_exists</condition>
+                    <path>${installdir}/uninstall.exe</path>
+                </fileTest>
+            </ruleList>
+            <validationActionList>
+                <throwError>
+                    <text>Password is required.</text>
+                    <ruleList>
+                        <compareText>
+                            <logic>equals</logic>
+                            <text></text>
+                            <value>${Userpasswd}</value>
+                        </compareText>
+                    </ruleList>
+                </throwError>
+                <throwError>
+                    <text>Password must be between 6 and 50 characters.</text>
+                    <ruleList>
+                        <regExMatch>
+                            <logic>does_not_match</logic>
+                            <pattern>^.{6,50}$</pattern>
+                            <text>${Userpasswd}</text>
+                        </regExMatch>
+                    </ruleList>
+                </throwError>
+                <throwError>
+                    <text>Please retype the password. </text>
+                    <ruleList>
+                        <compareText>
+                            <logic>equals</logic>
+                            <text></text>
+                            <value>${confirmpassword}</value>
+                        </compareText>
+                    </ruleList>
+                </throwError>
+                <throwError>
+                    <text>Passwords do not match.</text>
+                    <ruleList>
+                        <compareValues>
+                            <logic>does_not_equal</logic>
+                            <value1>${Userpasswd}</value1>
+                            <value2>${confirmpassword}</value2>
+                        </compareValues>
+                    </ruleList>
+                </throwError>
+                <throwError>
+                    <text>Last Name is required.</text>
+                    <ruleList>
+                        <compareText>
+                            <logic>equals</logic>
+                            <text></text>
+                            <value>${lastname}</value>
+                        </compareText>
+                    </ruleList>
+                </throwError>
+                <throwError>
+                    <text>First Name is required.</text>
+                    <ruleList>
+                        <compareText>
+                            <logic>equals</logic>
+                            <text></text>
+                            <value>${firstname}</value>
+                        </compareText>
+                    </ruleList>
+                </throwError>
+                <throwError>
+                    <text>Email is required.</text>
+                    <ruleList>
+                        <compareText>
+                            <logic>equals</logic>
+                            <text></text>
+                            <value>${email}</value>
+                        </compareText>
+                    </ruleList>
+                </throwError>
+                <throwError>
+                    <text>The provided value is not a valid email address.</text>
+                    <ruleList>
+                        <regExMatch>
+                            <logic>does_not_match</logic>
+                            <pattern>[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,9}</pattern>
+                            <text>${email}</text>
+                        </regExMatch>
+                    </ruleList>
+                </throwError>
+            </validationActionList>
+        </parameterGroup>
+    </parameterList>
+</project>
+

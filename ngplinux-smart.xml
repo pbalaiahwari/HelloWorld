@@ -1,0 +1,1609 @@
+<project>
+    <shortName>Discovery</shortName>
+    <fullName>LogiDiscovery</fullName>
+    <version>3.0.0</version>
+    <leftImage>supportfiles/discovery_left.png</leftImage>
+    <logoImage>supportfiles/discovery_top_right.png</logoImage>
+    <splashImage>supportfiles/splash.png</splashImage>
+    <languageSelectionStyle>onlyEnglishNames</languageSelectionStyle>
+    <componentList>
+        <component>
+            <name>default</name>
+            <description>Default Component</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>1</selected>
+            <show>1</show>
+            <folderList>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfiles</name>
+                    <platforms>all</platforms>
+                    <shortcutList>
+                        <shortcut>
+                            <comment>Uninstall</comment>
+                            <exec>${installdir}/${uninstallerName}</exec>
+                            <icon></icon>
+                            <name>Uninstall_${product_fullname}</name>
+                            <path>${installdir}</path>
+                            <platforms>all</platforms>
+                            <runAsAdmin>1</runAsAdmin>
+                            <runInTerminal>0</runInTerminal>
+                            <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                            <windowsExecArgs></windowsExecArgs>
+                            <windowsIcon></windowsIcon>
+                            <windowsPath>${installdir}</windowsPath>
+                        </shortcut>
+                    </shortcutList>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfileslinux</name>
+                    <platforms>linux-x64</platforms>
+                    <actionList>
+                        <changePermissions files="${installdir}/*.sh" permissions="0755"/>
+                        <changePermissions files="${installdir}/nodejs/bin/*" permissions="0755"/>
+                    </actionList>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>../output/platform</origin>
+                        </distributionDirectory>
+
+                        <!--  <distributionDirectory>
+                            <origin>../output/platform/examples</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/authorizationImport-examples</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/lib</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/extensions</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/web-server</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/settings</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/connection</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/ldap</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/schemata</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>licenses</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/ds</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/bin</origin>
+                            <onPackingFilterList>
+                                <fileNameFilter logic="does_not_match" pattern="*.bat"/>
+
+                                 <fileNameFilter logic="does_not_match" pattern="*.sh"/>
+                            </onPackingFilterList>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/cache</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/db</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/logs</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/linux-init-scripts</origin>
+                        </distributionDirectory>-->
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <destination>${installdir}/platform</destination>
+                    <name>ngprestoffiles</name>
+                    <platforms>linux-x64</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>licenses</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>sandbox-linux/nodejs</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>supportfiles/nssm</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <destination>${installdir}</destination>
+                    <name>ngpicon</name>
+                    <platforms>linux-x64</platforms>
+                    <distributionFileList>
+                        <!--  <distributionFile allowWildcards="1">
+                            <origin>../output/platform/as.v.*</origin>
+                        </distributionFile>
+                        <distributionFile allowWildcards="1">
+                            <origin>../output/platform/ds.v.*</origin>
+                        </distributionFile> -->
+</distributionFileList>
+                </folder>
+                <folder>
+                    <destination>${installdir}/platform</destination>
+                    <name>ngpjava</name>
+                    <platforms>linux-x64</platforms>
+                    <actionList>
+                        <changePermissions files="${installdir}/*.sh" permissions="0755"/>
+                        <changePermissions files="${installdir}/platform/java/jre1.8.0_102/bin/*" permissions="0755"/>
+                        <changePermissions files="${installdir}/platform/nodejs/bin/*" permissions="0755"/>
+                    </actionList>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>sandbox-linux/java</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <postInstallationActionList>
+                <deleteFile>
+                    <abortOnError>0</abortOnError>
+                    <path>${installdir}/platform/cache/DLP/*.*</path>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}/platform/cache/DLP/dlp.exe</path>
+                        </fileExists>
+                    </ruleList>
+                </deleteFile>
+                <writeFile>
+                    <path>${installdir}/platform/extensions/analysis-components/client/themeSource/npmglobal.sh</path>
+                    <text>export PATH=${installdir}/platform/nodejs/bin:$PATH
+npm install shelljs
+npm install less less-plugin-autoprefix --prefix ${installdir}/platform/extensions/analysis-components/client/themeSource/src</text>
+                    <ruleList>
+                        <fileTest condition="exists" path="${installdir}/platform/extensions/analysis-components/client/themeSource"/>
+                    </ruleList>
+                </writeFile>
+                <writeFile>
+                    <path>${installdir}/platform/extensions/analysis-components/client/themeSource/build.sh</path>
+                    <text>export PATH=${installdir}/platform/nodejs/bin:$PATH
+node build-themes.js</text>
+                    <ruleList>
+                        <fileTest condition="exists" path="${installdir}/platform/extensions/analysis-components/client/themeSource"/>
+                    </ruleList>
+                </writeFile>
+
+                <!--
+		                 <writeFile>
+                    <path>${installdir}/platform/bin/logiApplicationService.sh</path>
+                    <text>export LOGI_HOME=${installdir}
+export PATH=${installdir}/platform/nodejs/bin:$PATH
+cd "$LOGI_HOME/platform/as/server"
+node logiApplicationService.js</text>
+                </writeFile>
+
+		 <writeFile>
+                    <path>${installdir}/platform/bin/logiDataService.sh</path>
+                    <text>export LOGI_HOME=${installdir}
+export JAVA_HOME=${installdir}/platform/java/jre1.8.0_102
+export PATH=${installdir}/platform/nodejs/bin:$PATH
+node "$LOGI_HOME/platform/ds/server/logiDataService.js" </text>
+                    <ruleList>
+                        <isTrue value="${bundle_java}"/>
+                    </ruleList>
+                </writeFile>
+                <writeFile>
+                    <path>${installdir}/platform/bin/logiDataService.sh</path>
+                    <text>export LOGI_HOME=${installdir}
+export JAVA_HOME=${java_home}
+export PATH=${installdir}/platform/nodejs/bin:$PATH
+node "$LOGI_HOME/platform/ds/server/logiDataService.js" </text>
+                    <ruleList>
+                        <isFalse value="${bundle_java}"/>
+                    </ruleList>
+                </writeFile> -->
+                <substitute>
+                    <files>${installdir}/platform/bin/logiconfig.sh</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>@@INSTALLDIR@@</pattern>
+                            <value>${installdir}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@JAVADIR@@</pattern>
+                            <value>${installdir}/platform/java/jre1.8.0_102</value>
+                            <ruleList>
+                                <isTrue value="${bundle_java}"/>
+                            </ruleList>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@JAVADIR@@</pattern>
+                            <value>${java_home}</value>
+                            <ruleList>
+                                <isFalse value="${bundle_java}"/>
+                            </ruleList>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@NODEDIR@@</pattern>
+                            <value>${installdir}/platform/nodejs</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <substitute>
+                    <files>${installdir}/platform/settings/logiDataService.json</files>
+                    <type>regexp</type>
+                    <ruleList>
+                        <fileTest>
+                            <condition>not_exists</condition>
+                            <path>${installdir}/uninstall.exe</path>
+                        </fileTest>
+                    </ruleList>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>"systemUserPassword": "password"</pattern>
+                            <value>"systemUserPassword": "${Userpasswd}"</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>"systemPassword": "password"</pattern>
+                            <value>"systemPassword": "${Userpasswd}"</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>"displayName": "DataServices Administrator"</pattern>
+                            <value>"displayName": "${firstname} ${lastname}"</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>"firstName": "DataServices"</pattern>
+                            <value>"firstName": "${firstname}"</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>"lastName": "Administrator"</pattern>
+                            <value>"lastName": "${lastname}"</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>"email": "dataservices.admin@domain.com"</pattern>
+                            <value>"email": "${email}"</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <changePermissions files="${installdir}/platform/bin/logiApplicationService.sh" permissions="0755"/>
+                <changePermissions files="${installdir}/platform/bin/logiDataService.sh" permissions="0755"/>
+                <changePermissions files="${installdir}/platform/bin/logiconfig.sh" permissions="0755"/>
+                <changePermissions files="${installdir}/platform/bin/authorizationImportTool.sh" permissions="0755"/>
+                <changePermissions files="${installdir}/platform/bin/authorizationExportTool.sh" permissions="0755"/>
+                <changePermissions files="${installdir}/platform/extensions/analysis-components/client/themeSource/npmglobal.sh" permissions="0755"/>
+                <changePermissions files="${installdir}/platform/extensions/analysis-components/client/themeSource/build.sh" permissions="0755"/>
+                <changePermissions>
+                    <files>${installdir}/platform/bin/licenseImportTool.sh</files>
+                    <permissions>0755</permissions>
+                </changePermissions>
+                <changePermissions files="${installdir}/platform/bin/clientSecret.sh" permissions="0755"/>
+                <actionGroup>
+                    <abortOnError>0</abortOnError>
+                    <actionList>
+                        <writeFile>
+                            <abortOnError>0</abortOnError>
+                            <path>${installdir}/logiTrial03.lic</path>
+                            <text>{
+  "LicenseFile": {
+    "Version": "3",
+    "Product": { "Name": "Logi Discovery" },
+    "Customer": {
+      "Name": "Logi Analytics",
+      "Email": "${email}",
+      "Contact": "${firstname} ${lastname}"
+    },
+    "License": {
+      "ComputerName": "name of the computer",
+      "CountUniqueUsers": "False",
+      "ExpirationDate": "current date + 14 days",
+      "LicenseKey": "030504_96O231_Trial_Key_",
+      "AssignmentKey": "6312-E2674-ABE6-FDF2B-5770-6E43F"
+    }
+  }
+ }</text>
+                        </writeFile>
+                        <writeFile>
+                            <path>${installdir}/platform/bin/writelicense.js</path>
+                            <text>var fs = require('fs');
+var os = require('os')
+var path = require('path');
+var LOGI_HOME = process.env.LOGI_HOME;
+var crypto = require('crypto');
+var srcPath = path.join(LOGI_HOME, 'logiTrial03.lic');
+var computername = os.hostname();
+
+//date function to get custom date 
+function timestamp(){
+	function pad(n) {return n&lt;10 ? "0"+n : n}
+	var d = new Date(); 
+	d.setDate(d.getDate() + 14);
+	var dash = "-";
+	var colon = ":";
+	return d.getFullYear()+dash+
+	pad(d.getMonth()+1)+dash+
+	pad(d.getDate())
+}
+var date = timestamp();
+var date_format = date.replace(/(\d{4})-(\d{2})-(\d{2})/g, '$1$2$3');
+
+var licenseKey = "030504_96O231_Trial_Key_"+date_format+computername;
+var hash = crypto.createHash('md5').update(licenseKey).digest('hex');
+hash = hash.toUpperCase();
+hash = hash.substr(0, 4) + "-" + hash.substr(5, 5) + "-" + hash.substr(11, 4) + "-" + hash.substr(16, 5) + "-" + hash.substr(22, 4) + "-" + hash.substr(27);
+
+//function to write to the license file.
+fs.readFile(srcPath, 'utf8', function (err,data) {
+	if (err) {
+		console.log('error', err);
+		}	
+		var readData = data;
+		var writeComputerName = readData.replace(/("ComputerName"\s*:\s*")([^"]+)(")/g, '$1'+computername+'$3');
+		var writeExpireDate = writeComputerName.replace(/("ExpirationDate"\s*:\s*")([^"]+)(")/g, '$1'+date+'$3');
+		var  writeLicenseKey = writeExpireDate.replace(/("LicenseKey"\s*:\s*")([^"]+)(")/g, '$1030504_96O231_Trial_Key_'+date_format+'$3')
+		var writeAssignmentKey = writeLicenseKey.replace(/("AssignmentKey"\s*:\s*")([^"]+)(")/g, '$1'+hash+'$3');
+		fs.writeFile(srcPath, writeAssignmentKey, 'utf8', function (err) {
+			if (err) 
+				console.log('error', err);
+			else {
+				console.log("successfully created.");
+			}
+			});
+});
+
+</text>
+                        </writeFile>
+                        <writeFile>
+                            <path>${installdir}/platform/bin/writelicense.sh</path>
+                            <text>#!/usr/bin/env bash
+
+source logiconfig.sh
+
+if [[ -d "$NODE_HOME" ]]; then
+   export PATH="$NODE_HOME/bin":$PATH
+fi
+
+if [ ! -f "$NODE_HOME/bin/node" ];
+then
+    echo "The NODE_HOME environment variable is not defined correctly"
+    echo "It is needed to run Logi Application Services."
+    exit 1
+fi
+
+
+
+[ -z "$LOGI_HOME" ] &amp;&amp; echo "LOGI_HOME must be set. Exiting" &amp;&amp; exit 1;
+[ ! -d "$LOGI_HOME" ] &amp;&amp; echo "LOGI_HOME points to invalid location. Exiting" &amp;&amp; exit 1;
+
+# run the App Service
+
+cd "$LOGI_HOME/platform/bin"
+node writelicense.js
+
+
+exit $?</text>
+                        </writeFile>
+                        <changePermissions>
+                            <files>${installdir}/platform/bin/writelicense.js</files>
+                            <permissions>0755</permissions>
+                        </changePermissions>
+                        <changePermissions>
+                            <files>${installdir}/platform/bin/writelicense.sh</files>
+                            <permissions>0755</permissions>
+                        </changePermissions>
+                        <runProgram>
+                            <abortOnError>0</abortOnError>
+                            <program>${installdir}/platform/bin/writelicense.sh</program>
+                            <programArguments></programArguments>
+                        </runProgram>
+                        <deleteFile>
+                            <abortOnError>0</abortOnError>
+                            <path>${installdir}/platform/bin/writelicense.sh</path>
+                        </deleteFile>
+                        <deleteFile>
+                            <abortOnError>0</abortOnError>
+                            <path>${installdir}/platform/bin/writelicense.js</path>
+                        </deleteFile>
+                    </actionList>
+                </actionGroup>
+                <actionGroup>
+                    <abortOnError>0</abortOnError>
+                    <actionList>
+                        <writeFile>
+                            <path>${installdir}/platform/nssm/keygen.sh</path>
+                            <text>#!/bin/bash 
+
+# Key generator for NGP
+
+  export CJAR="${installdir}/platform/nssm/lib/commons-cli-1.3.1.jar"
+  export GJAR="${installdir}/platform/nssm/lib/gson-2.3.1.jar"
+  export KJAR="${installdir}/platform/nssm/lib/keygen-1.0.0.jar"
+  export JAVA_HOME=${installdir}/platform/java/jre1.8.0_102
+  export LOGI_HOME=${installdir}
+  export CPTH="$CJAR:$GJAR:$KJAR"
+
+"$JAVA_HOME/bin/java" -cp "$CPTH" com.logi.ds.KeyGen $*</text>
+                            <ruleList>
+                                <isTrue>
+                                    <value>${bundle_java}</value>
+                                </isTrue>
+                            </ruleList>
+                        </writeFile>
+                        <writeFile>
+                            <path>${installdir}/platform/nssm/keygen.sh</path>
+                            <text>#!/bin/bash 
+
+# Key generator for NGP
+
+ export CJAR="${installdir}/platform/nssm/lib/commons-cli-1.3.1.jar"
+  export GJAR="${installdir}/platform/nssm/lib/gson-2.3.1.jar"
+  export KJAR="${installdir}/platform/nssm/lib/keygen-1.0.0.jar"
+  export JAVA_HOME=${java_home}
+  export LOGI_HOME=${installdir}
+  export CPTH="$CJAR:$GJAR:$KJAR"
+
+"$JAVA_HOME/bin/java" -cp "$CPTH" com.logi.ds.KeyGen $*</text>
+                            <ruleList>
+                                <isFalse>
+                                    <value>${bundle_java}</value>
+                                </isFalse>
+                            </ruleList>
+                        </writeFile>
+                        <changePermissions>
+                            <files>${installdir}/platform/nssm/keygen.sh</files>
+                            <permissions>0755</permissions>
+                        </changePermissions>
+                        <runProgram>
+                            <program>${installdir}/platform/nssm/keygen.sh</program>
+                            <programArguments>keygen.sh  -alg aes -default -install</programArguments>
+                        </runProgram>
+                        <writeFile>
+                            <path>/etc/init.d/logiservice.sh</path>
+                            <text>#!/bin/bash
+#
+# chkconfig:        235 30 90
+# description: Discovery 
+#
+
+# Get function from functions library
+
+DISCOVERYHOME=@@INSTALLDIR@@
+
+
+export DISCOVERYHOME
+
+. /etc/init.d/functions
+
+echo $DISCOVERYHOME
+
+
+
+
+
+# Start the Discovery services 
+start() {
+        cd $DISCOVERYHOME/platform/bin
+        #       " Starting Logi Discovery Data service "
+        ./logiDataService.sh &gt;/dev/null 2&gt;&amp;1 &amp;
+        #       " Starting Logi Application service "
+        ./logiApplicationService.sh  &gt;/dev/null 2&gt;&amp;1 &amp;
+		
+		### Create the lock file ###
+        touch /var/lock/subsys/discovery
+        success $"Discovery Services startup"
+        echo
+}
+
+# Restart the Discovery services 
+stop() {
+        #       " Stopping Discovery services "
+        killproc logiApplicationService.sh
+	killproc logiDataService.sh 
+        killproc node
+        kill -HUP `ps -ef | grep com.logi.ds.dataserver.ApplicationLauncher | grep -v grep | awk '{print $2}'`
+        ### Now, delete the lock file ###
+        rm -f /var/lock/subsys/discovery
+        echo
+}
+ 
+### main logic ###
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  status)
+        status discovery
+        ;;
+  restart|reload|condrestart)
+        stop
+        start
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart|reload|status}"
+        exit 1
+esac
+  
+exit 0
+</text>
+                        </writeFile>
+                        <substitute>
+                            <files>/etc/init.d/logiservice.sh</files>
+                            <type>regexp</type>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>@@INSTALLDIR@@</pattern>
+                                    <value>${installdir}</value>
+                                </substitution>
+                            </substitutionList>
+                        </substitute>
+                        <changePermissions>
+                            <files>/etc/init.d/logiservice.sh</files>
+                            <permissions>0755</permissions>
+                        </changePermissions>
+                        <runProgram>
+                            <abortOnError>0</abortOnError>
+                            <program>/etc/init.d/logiservice.sh</program>
+                            <programArguments>start</programArguments>
+                        </runProgram>
+                        <wait>
+                            <ms>45000</ms>
+                        </wait>
+                        <actionGroup>
+                            <abortOnError>0</abortOnError>
+                            <showMessageOnError>0</showMessageOnError>
+                            <actionList>
+                                <runProgram>
+                                    <program>${installdir}/platform/bin/licenseImportTool.sh</program>
+                                    <programArguments>--username=admin --password=${Userpasswd.password}</programArguments>
+                                    <ruleList>
+                                        <fileExists>
+                                            <path>${installdir}/logiTrial03.lic</path>
+                                        </fileExists>
+                                    </ruleList>
+                                </runProgram>
+                                <runProgram>
+                                    <program>${installdir}/platform/bin/clientSecret.sh</program>
+                                    <programArguments>--username=admin --password='${Userpasswd.password}'</programArguments>
+                                </runProgram>
+                                <runProgram>
+                                    <program>${installdir}/platform/bin/setDefaultPermissions.sh</program>
+                                    <programArguments>--username=admin --password='${Userpasswd.password}'</programArguments>
+                                </runProgram>
+                                <runProgram>
+                                    <program>${installdir}/platform/bin/authorizationImportTool.sh</program>
+                                    <programArguments> --user=admin --password=${Userpasswd.password} --authorization_file=${installdir}/platform/authorizationImport-examples/syspublic-authorization.xlsx</programArguments>
+                                </runProgram>
+                            </actionList>
+                            <onErrorActionList>
+                                <setInstallerVariable>
+                                    <name>installerError</name>
+                                    <value>1</value>
+                                </setInstallerVariable>
+                            </onErrorActionList>
+                        </actionGroup>
+                        <runProgram>
+                            <abortOnError>0</abortOnError>
+                            <program>/etc/init.d/logiservice.sh</program>
+                            <programArguments>stop</programArguments>
+                        </runProgram>
+                        <wait>
+                            <ms>5000</ms>
+                        </wait>
+                        <runProgram>
+                            <abortOnError>0</abortOnError>
+                            <program>/etc/init.d/logiservice.sh</program>
+                            <programArguments>start</programArguments>
+                        </runProgram>
+                    </actionList>
+                    <ruleList>
+                        <isTrue>
+                            <value>${installer_is_root_install}</value>
+                        </isTrue>
+                    </ruleList>
+                </actionGroup>
+                <removeFilesFromUninstaller files="${installdir}/db/*"/>
+                <removeFilesFromUninstaller files="${installdir}/db/sql/*"/>
+            </postInstallationActionList>
+            <postUninstallationActionList>
+                <showQuestion text="Do you want the uninstallation to also remove the logs and database data?" variable="remove_mysql">
+                    <default>no</default>
+                </showQuestion>
+                <deleteFile>
+                    <path>${installdir}/platform</path>
+                    <ruleList>
+                        <compareText logic="equals" text="${remove_mysql}" value="yes"/>
+                    </ruleList>
+                </deleteFile>
+                <deleteFile>
+                    <path>/etc/init.d/logiservice.sh</path>
+                    <ruleList>
+                        <isTrue>
+                            <value>${installer_is_root_install}</value>
+                        </isTrue>
+                    </ruleList>
+                </deleteFile>
+            </postUninstallationActionList>
+            <postUninstallerCreationActionList>
+                <actionGroup>
+                    <actionList>
+                        <showWarning>
+                            <text>An error has prevented the completion of the installation. Please click finish and get more details in the readme file (${installdir}/readme.txt).</text>
+                        </showWarning>
+                        <writeFile>
+                            <path>${installdir}/readme.txt</path>
+                            <text>The installation completed with an error. 
+
+1. Verify that both the "Logi Data Service" and "Logi Application Service" are running.
+2. Check the logs to find more information:
+Install log: ${installdir}/LogiX-installlog.log
+Platform logs: ${installdir}/platform/logs
+
+Contact Support to troubleshoot the issue.
+
+Thank you.</text>
+                        </writeFile>
+                    </actionList>
+                    <ruleList>
+                        <isTrue>
+                            <value>${installerError}</value>
+                        </isTrue>
+                    </ruleList>
+                </actionGroup>
+            </postUninstallerCreationActionList>
+            <preUninstallationActionList>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <program>/etc/init.d/logiservice.sh</program>
+                    <programArguments>stop</programArguments>
+                    <showMessageOnError>0</showMessageOnError>
+                    <ruleList>
+                        <isTrue>
+                            <value>${installer_is_root_install}</value>
+                        </isTrue>
+                    </ruleList>
+                </runProgram>
+                <deleteFile path="${installdir}/platform/extensions"/>
+                <deleteFile path="${installdir}/platform/web-server"/>
+                <deleteFile path="${installdir}/platform/ds"/>
+            </preUninstallationActionList>
+            <startMenuShortcutList>
+                <startMenuShortcut>
+                    <comment>Uninstall_${product_fullname}</comment>
+                    <name>Uninstall_${product_fullname}</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon></windowsIcon>
+                    <windowsPath>${installdir}/</windowsPath>
+                </startMenuShortcut>
+            </startMenuShortcutList>
+        </component>
+        <component>
+            <name>upgrade</name>
+            <description>Upgrade Component</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>0</selected>
+            <show>0</show>
+            <folderList>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfiles</name>
+                    <platforms>all</platforms>
+                    <shortcutList>
+                        <shortcut>
+                            <comment>Uninstall</comment>
+                            <exec>${installdir}/${uninstallerName}</exec>
+                            <icon></icon>
+                            <name>Uninstall_${product_fullname}</name>
+                            <path>${installdir}</path>
+                            <platforms>all</platforms>
+                            <runAsAdmin>1</runAsAdmin>
+                            <runInTerminal>0</runInTerminal>
+                            <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                            <windowsExecArgs></windowsExecArgs>
+                            <windowsIcon></windowsIcon>
+                            <windowsPath>${installdir}</windowsPath>
+                        </shortcut>
+                    </shortcutList>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}/platform</destination>
+                    <name>programfileslinux</name>
+                    <platforms>linux-x64</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>../output/platform/examples</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/authorizationImport-examples</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/lib</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <allowWildcards>1</allowWildcards>
+                            <origin>../output/platform/extensions</origin>
+                            <onPackingFilterList>
+                                <fileNameFilter logic="does_not_match" pattern="*.sh"/>
+                            </onPackingFilterList>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <allowWildcards>1</allowWildcards>
+                            <origin>../output/platform/web-server</origin>
+                            <onPackingFilterList>
+                                <fileNameFilter logic="does_not_match" pattern="*.sh"/>
+                            </onPackingFilterList>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/ds</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>../output/platform/schemata</origin>
+                        </distributionDirectory>
+                        <distributionFile>
+                            <origin>../output/platform/version.txt</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <destination>${installdir}</destination>
+                    <name>ngpicon</name>
+                    <platforms>linux-x64</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>supportfiles/platformdiscovery.ico</origin>
+                        </distributionFile>
+
+                        <!--   <distributionFile allowWildcards="1">
+                            <origin>../output/platform/as.v.*</origin>
+                        </distributionFile>
+                        <distributionFile allowWildcards="1">
+                            <origin>../output/platform/ds.v.*</origin>
+                        </distributionFile> -->
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <postInstallationActionList>
+                <actionGroup>
+                    <abortOnError>0</abortOnError>
+                    <actionList>
+                        <readFile>
+                            <abortOnError>0</abortOnError>
+                            <name>datahubclientsecret</name>
+                            <path>${installdir}/platform/extensions/datahub/config.json.backup</path>
+                        </readFile>
+                        <setInstallerVariableFromRegEx>
+                            <abortOnError>0</abortOnError>
+                            <name>datahubconfig</name>
+                            <pattern>.*("clientSecret"\s*:\s*"[^"]+").*</pattern>
+                            <substitution>\1</substitution>
+                            <text>${datahubclientsecret}</text>
+                        </setInstallerVariableFromRegEx>
+                        <substitute>
+                            <abortOnError>0</abortOnError>
+                            <files>${installdir}/platform/extensions/datahub/config.json</files>
+                            <type>regexp</type>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>"clientSecret"\s*:\s*"[^"]+"</pattern>
+                                    <value>${datahubconfig}</value>
+                                </substitution>
+                            </substitutionList>
+                        </substitute>
+                        <readFile>
+                            <abortOnError>0</abortOnError>
+                            <name>webclientsecret</name>
+                            <path>${installdir}/platform/web-server/config.json.backup</path>
+                        </readFile>
+                        <setInstallerVariableFromRegEx>
+                            <abortOnError>0</abortOnError>
+                            <name>webconfig</name>
+                            <pattern>.*("clientSecret"\s*:\s*"[^"]+").*</pattern>
+                            <substitution>\1</substitution>
+                            <text>${webclientsecret}</text>
+                        </setInstallerVariableFromRegEx>
+                        <substitute>
+                            <abortOnError>0</abortOnError>
+                            <files>${installdir}/platform/web-server/config.json</files>
+                            <type>regexp</type>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>"clientSecret"\s*:\s*"[^"]+"</pattern>
+                                    <value>${webconfig}</value>
+                                </substitution>
+                            </substitutionList>
+                        </substitute>
+                        <runProgram>
+                            <abortOnError>0</abortOnError>
+                            <program>/etc/init.d/logiservice.sh</program>
+                            <programArguments>start</programArguments>
+                        </runProgram>
+                    </actionList>
+                    <ruleList>
+                        <isTrue>
+                            <value>${installer_is_root_install}</value>
+                        </isTrue>
+                    </ruleList>
+                </actionGroup>
+                <deleteFile path="${project.rollbackBackupDirectory}"/>
+                <deleteFile>
+                    <path>${installdir}/platform/extensions/datahub/config.json.backup</path>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}/platform/extensions/datahub/config.json.backup</path>
+                        </fileExists>
+                        <isTrue>
+                            <value>${installer_is_root_install}</value>
+                        </isTrue>
+                    </ruleList>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}/platform/web-server/config.json.backup</path>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}/platform/web-server/config.json.backup</path>
+                        </fileExists>
+                        <isTrue>
+                            <value>${installer_is_root_install}</value>
+                        </isTrue>
+                    </ruleList>
+                </deleteFile>
+            </postInstallationActionList>
+            <postUninstallationActionList>
+                <showQuestion text="Do you want the uninstallation to also remove the logs and database data?" variable="remove_logs_data">
+                    <default>no</default>
+                </showQuestion>
+                <deleteFile>
+                    <path>${installdir}/platform</path>
+                    <ruleList>
+                        <compareText logic="equals" text="${remove_logs_data}" value="yes"/>
+                    </ruleList>
+                </deleteFile>
+                <deleteFile>
+                    <path>/etc/init.d/logiservice.sh</path>
+                    <ruleList>
+                        <isTrue>
+                            <value>${installer_is_root_install}</value>
+                        </isTrue>
+                    </ruleList>
+                </deleteFile>
+            </postUninstallationActionList>
+            <preUninstallationActionList>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <program>/etc/init.d/logiservice.sh</program>
+                    <programArguments>stop</programArguments>
+                    <showMessageOnError>0</showMessageOnError>
+                    <ruleList>
+                        <isTrue>
+                            <value>${installer_is_root_install}</value>
+                        </isTrue>
+                    </ruleList>
+                </runProgram>
+                <deleteFile path="${installdir}/platform/examples"/>
+                <deleteFile path="${installdir}/platform/lib"/>
+                <deleteFile path="${installdir}/platform/extensions"/>
+                <deleteFile path="${installdir}/platform/authorizationImport-examples"/>
+                <deleteFile path="${installdir}/platform/web-server"/>
+                <deleteFile path="${installdir}/platform/ds"/>
+                <deleteFile path="${installdir}/platform/bin"/>
+                <deleteFile path="${installdir}/platform/cache"/>
+                <deleteFile path="${installdir}/platform/java"/>
+                <deleteFile path="${installdir}/platform/licenses"/>
+                <deleteFile path="${installdir}/platform/nodejs"/>
+                <deleteFile path="${installdir}/platform/settings"/>
+                <deleteFile path="${installdir}/platform/nssm"/>
+                <deleteFile>
+                    <path>${installdir}/platform/connection</path>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}/platform/ds-extensions</path>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}/platform/linux-init-scripts</path>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}/platform/thirdparty-executables</path>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}/platform/ssl</path>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}/platform/db/*.*</path>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}/platform/db/sql</path>
+                </deleteFile>
+            </preUninstallationActionList>
+            <readyToInstallActionList>
+                <copyFile>
+                    <destination>${installdir}/platform/extensions/datahub/config.json.backup</destination>
+                    <origin>${installdir}/platform/extensions/datahub/config.json</origin>
+                    <ruleList>
+                        <isTrue>
+                            <value>${installer_is_root_install}</value>
+                        </isTrue>
+                    </ruleList>
+                </copyFile>
+                <copyFile>
+                    <destination>${installdir}/platform/web-server/config.json.backup</destination>
+                    <origin>${installdir}/platform/web-server/config.json</origin>
+                    <ruleList>
+                        <isTrue>
+                            <value>${installer_is_root_install}</value>
+                        </isTrue>
+                    </ruleList>
+                </copyFile>
+            </readyToInstallActionList>
+        </component>
+    </componentList>
+    <initializationActionList>
+        <logMessage>
+            <enableTimeStamp>0</enableTimeStamp>
+            <text>Version:- ${product_version}
+</text>
+            <timeStampFormat></timeStampFormat>
+        </logMessage>
+        <setInstallerVariable name="installation_registry_path" persist="1" value="~">
+            <ruleList>
+                <platformTest negate="1" type="windows"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="installation_registry_path" persist="1" value="/etc">
+            <ruleList>
+                <isTrue value="${installer_is_root_install}"/>
+                <platformTest negate="1" type="windows"/>
+            </ruleList>
+        </setInstallerVariable>
+        <createTimeStamp>
+            <format>%Y%m%d%H%M%S</format>
+            <variable>timestamp</variable>
+        </createTimeStamp>
+    </initializationActionList>
+    <preInstallationActionList>
+        <autodetectJava>
+            <abortOnError>0</abortOnError>
+            <promptUser>0</promptUser>
+            <showMessageOnError>0</showMessageOnError>
+            <validVersionList>
+                <validVersion>
+                    <bitness>64</bitness>
+                    <maxVersion></maxVersion>
+                    <minVersion>1.8</minVersion>
+                    <requireJDK>0</requireJDK>
+                    <vendor></vendor>
+                </validVersion>
+            </validVersionList>
+        </autodetectJava>
+        <dirName path="${java_executable}" variable="java_bin_dir"/>
+        <dirName path="${java_bin_dir}" variable="java_home"/>
+
+        <!-- <showInfo text="JAVA ${java_autodetected} PATH: ${java_executable}"/>-->
+        <foreach>
+            <values>version oldVersion installdir oldInstalldir</values>
+            <variables>name variable</variables>
+            <actionList>
+                <setInstallerVariable name="${variable}" value=""/>
+                <iniFileGet>
+                    <file>${installation_registry_path}/${project.fullName}.ini</file>
+                    <key>${name}</key>
+                    <section>details</section>
+                    <variable>${variable}</variable>
+                    <ruleList>
+                        <fileTest condition="exists" path="${installation_registry_path}/${project.fullName}.ini"/>
+                    </ruleList>
+                </iniFileGet>
+
+                <!-- <showInfo text="name : ${name}"/>
+                <showInfo text="variable : ${variable}"/>-->
+            </actionList>
+            <ruleList>
+                <platformTest negate="1" type="windows"/>
+            </ruleList>
+        </foreach>
+
+        <!-- Validate if the version bundled is valid for the update -->
+        <throwError>
+            <text>The existing installation of Discovery module is newer or same version. Aborting...</text>
+            <ruleList>
+                <compareVersions>
+                    <logic>greater_or_equal</logic>
+                    <version1>${oldVersion}</version1>
+                    <version2>${project.version}</version2>
+                </compareVersions>
+            </ruleList>
+        </throwError>
+
+        <!-- default installdir value -->
+        <setInstallerVariable>
+            <name>default_installdir</name>
+            <value>${platform_install_prefix}/${product_shortname}</value>
+        </setInstallerVariable>
+
+        <!-- old value for upgrade -->
+        <setInstallerVariable>
+            <name>default_installdir</name>
+            <value>${oldInstalldir}</value>
+            <ruleList>
+                <fileExists path="${oldInstalldir}/platform"/>
+            </ruleList>
+        </setInstallerVariable>
+        <componentSelection>
+            <deselect>default</deselect>
+            <select>upgrade</select>
+            <ruleList>
+                <fileExists path="${oldInstalldir}/platform"/>
+            </ruleList>
+        </componentSelection>
+        <actionGroup>
+            <actionList>
+                <!-- <showInfo>
+                    <text>An existing installation has been detected in ${installdir}.</text>
+                </showInfo>-->
+                <showQuestion>
+                    <default>yes</default>
+                    <text>A version of the Discovery module is already installed in ${installdir}. Would you like to upgrade to current version ${project.version}?
+Please note, clicking on Yes and then cancelling later will result in a corrupted Installer.</text>
+                    <title>Discovery Module Upgrade</title>
+                    <variable>shouldupgrade</variable>
+                </showQuestion>
+                <exit>
+                    <exitCode>1</exitCode>
+                    <ruleList>
+                        <isFalse>
+                            <value>${shouldupgrade}</value>
+                        </isFalse>
+                    </ruleList>
+                </exit>
+                <setInstallerVariable name="project.parameter(installdir).ask" value="0"/>
+            </actionList>
+
+            <!-- Assume an existing installation if ${installdir} directory exists -->
+            <ruleList>
+                <fileExists path="${oldInstalldir}/platform"/>
+
+                <!-- <fileTest condition="exists" path="${installdir}"/>-->
+            </ruleList>
+        </actionGroup>
+    </preInstallationActionList>
+    <readyToInstallActionList>
+        <runProgram>
+            <abortOnError>0</abortOnError>
+            <program>/etc/init.d/logiservice.sh</program>
+            <programArguments>stop</programArguments>
+            <ruleList>
+                <isTrue>
+                    <value>${installer_is_root_install}</value>
+                </isTrue>
+                <fileExists>
+                    <path>${installdir}/uninstall.dat</path>
+                </fileExists>
+                <fileExists>
+                    <path>/etc/init.d/logiservice.sh</path>
+                </fileExists>
+            </ruleList>
+        </runProgram>
+
+        <!-- check application services are running, then stop application services
+ check data services are running, then stop data services
+  <deleteFile>
+            <path>${installdir}/as.v.*</path>
+            <ruleList>
+                <fileExists path="${oldInstalldir}/platform"/>
+            </ruleList>
+        </deleteFile>
+        <deleteFile>
+            <path>${installdir}/ds.v.*</path>
+            <ruleList>
+                <fileExists path="${oldInstalldir}/platform"/>
+            </ruleList>
+        </deleteFile>
+ Add the files installed by the previous
+        installation to the uninstaller -->
+        <addDirectoriesToUninstaller>
+            <addContents>1</addContents>
+            <files>${installdir}/extensions;${installdir}/web-server;${installdir}/ds;${installdir}/settings;${installdir}/bin;${installdir}/cache;${installdir}/licenses;${installdir}/nodejs;${installdir}/java</files>
+            <matchHiddenFiles>1</matchHiddenFiles>
+            <ruleList>
+                <fileExists path="${oldInstalldir}/platform"/>
+            </ruleList>
+        </addDirectoriesToUninstaller>
+    </readyToInstallActionList>
+    <postInstallationActionList>
+        <foreach>
+            <values>version "${project.version}" installdir "${installdir}"</values>
+            <variables>name variable</variables>
+            <actionList>
+                <iniFileSet>
+                    <file>${installation_registry_path}/${project.fullName}.ini</file>
+                    <key>${name}</key>
+                    <section>details</section>
+                    <value>${variable}</value>
+                </iniFileSet>
+            </actionList>
+            <ruleList>
+                <platformTest negate="1" type="windows"/>
+            </ruleList>
+        </foreach>
+        <addFilesToUninstaller files="${installation_registry_path}/${project.fullName}.ini"/>
+    </postInstallationActionList>
+    <enableRollback>1</enableRollback>
+    <enableTimestamp>1</enableTimestamp>
+    <height>500</height>
+
+    <!-- Configures the final destination of the installation log -->
+    <installationLogFile>${installdir}/${project.shortName}-${product_version}
+-installLog.log</installationLogFile>
+    <licenseFileEncoding>utf-8</licenseFileEncoding>
+    <readmeFileEncoding>utf-8</readmeFileEncoding>
+    <rollbackBackupDirectory>${system_temp_directory}/backup</rollbackBackupDirectory>
+    <saveRelativePaths>1</saveRelativePaths>
+    <showFileUnpackingProgress>0</showFileUnpackingProgress>
+
+    <!-- Configures the final destination of the uninstallation log -->
+    <uninstallationLogFile>${system_temp_directory}/${project.shortName}-uninstallation.log</uninstallationLogFile>
+    <vendor>Logi Analytics</vendor>
+    <width>600</width>
+    <windows64bitMode>1</windows64bitMode>
+    <customLanguageFileList>
+        <language>
+            <code>en</code>
+            <file>supportfiles/discovery_en.lng</file>
+        </language>
+    </customLanguageFileList>
+    <finalPageActionList>
+        <actionGroup>
+            <progressText>Do you want to open the readme file</progressText>
+            <actionList>
+                <readFile>
+                    <name>text</name>
+                    <path>${installdir}/readme.txt</path>
+                </readFile>
+                <showText>
+                    <height>500</height>
+                    <text>${text}</text>
+                    <title>README</title>
+                    <width>600</width>
+                </showText>
+            </actionList>
+            <ruleList>
+                <isTrue>
+                    <value>${installerError}</value>
+                </isTrue>
+            </ruleList>
+        </actionGroup>
+    </finalPageActionList>
+    <installationAbortedActionList>
+        <actionGroup>
+            <abortOnError>0</abortOnError>
+            <actionList>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <program>/etc/init.d/logiservice.sh</program>
+                    <programArguments>stop</programArguments>
+                    <showMessageOnError>0</showMessageOnError>
+                    <ruleList>
+                        <isTrue>
+                            <value>${installer_is_root_install}</value>
+                        </isTrue>
+                    </ruleList>
+                </runProgram>
+                <deleteFile>
+                    <abortOnError>0</abortOnError>
+                    <path>/etc/init.d/logiservice.sh</path>
+                    <showMessageOnError>0</showMessageOnError>
+                    <ruleList>
+                        <isTrue>
+                            <value>${installer_is_root_install}</value>
+                        </isTrue>
+                    </ruleList>
+                </deleteFile>
+                <deleteFile>
+                    <abortOnError>0</abortOnError>
+                    <path>${installdir}</path>
+                    <showMessageOnError>0</showMessageOnError>
+                </deleteFile>
+            </actionList>
+            <ruleList>
+                <fileTest>
+                    <condition>not_exists</condition>
+                    <path>${installdir}/uninstall.dat</path>
+                </fileTest>
+            </ruleList>
+        </actionGroup>
+        <actionGroup>
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>0</showMessageOnError>
+            <actionList>
+                <deleteFile>
+                    <path>${installdir}/platform/extensions/datahub/config.json.backup</path>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}/platform/extensions/datahub/config.json.backup</path>
+                        </fileExists>
+                    </ruleList>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}/platform/web-server/config.json.backup</path>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}/platform/web-server/config.json.backup</path>
+                        </fileExists>
+                    </ruleList>
+                </deleteFile>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <program>/etc/init.d/logiservice.sh</program>
+                    <programArguments>start</programArguments>
+                </runProgram>
+            </actionList>
+            <ruleList>
+                <isTrue>
+                    <value>${installer_is_root_install}</value>
+                </isTrue>
+                <fileExists>
+                    <path>${installdir}/uninstall.dat</path>
+                </fileExists>
+                <fileExists>
+                    <path>/etc/init.d/logiservice.sh</path>
+                </fileExists>
+            </ruleList>
+        </actionGroup>
+    </installationAbortedActionList>
+
+    <!-- <licenseFileList>
+        <licenseFile>
+            <code>en</code>
+            <encoding>utf-8</encoding>
+            <file>License.txt</file>
+        </licenseFile>
+    </licenseFileList>-->
+    <parameterList>
+        <stringParameter name="as_ver" ask="0">
+            <description></description>
+            <explanation></explanation>
+            <value></value>
+            <default></default>
+            <allowEmptyValue>1</allowEmptyValue>
+            <width>40</width>
+        </stringParameter>
+        <stringParameter name="ds_ver" ask="0">
+            <description></description>
+            <explanation></explanation>
+            <value></value>
+            <default></default>
+            <allowEmptyValue>1</allowEmptyValue>
+            <width>40</width>
+        </stringParameter>
+        <licenseParameter>
+            <name>logi_license</name>
+            <title>Logi Analytics License Agreement</title>
+            <description>Please read the following License Agreement. You must accept the terms of this agreement before continuing with the installation.</description>
+            <explanation></explanation>
+            <file>License.txt</file>
+            <htmlFile></htmlFile>
+            <insertAfter>welcome</insertAfter>
+            <wrapText>1</wrapText>
+        </licenseParameter>
+        <directoryParameter>
+            <name>installdir</name>
+            <description>Installer.Parameter.installdir.description</description>
+            <explanation>Installer.Parameter.installdir.explanation</explanation>
+            <value></value>
+            <default>${default_installdir}</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <ask>yes</ask>
+            <cliOptionName>prefix</cliOptionName>
+            <insertBefore>readytoinstall</insertBefore>
+            <mustBeWritable>yes</mustBeWritable>
+            <mustExist>0</mustExist>
+            <width>30</width>
+        </directoryParameter>
+        <choiceParameter>
+            <name>java_setup_type</name>
+            <title>Choice of Java JRE for Discovery Module.</title>
+            <description></description>
+            <explanation>The discovery module being installed requires version 1.8 of the Java runtime environment. We have detected that you already have Java 1.8 installed on this machine.
+
+You can choose to have discovery module use your existing installation of Java or have it install a bundled version of Java specifically for use with discovery module only.
+
+Logi Analytics recommends that you install the bundled version of the Java 1.8. runtime. If this option is chosen, you will be presented with a dialog showing a click through license from Oracle Corporation which you must accept. </explanation>
+            <value></value>
+            <default>bundlejre</default>
+            <allowEmptyValue>1</allowEmptyValue>
+            <displayType>radiobuttons</displayType>
+            <insertAfter>logi_license</insertAfter>
+            <ordering>default</ordering>
+            <width>40</width>
+            <optionList>
+                <option>
+                    <description></description>
+                    <image></image>
+                    <text>Install bundled Java 1.8 now, for use only with the Discovery Module.
+ </text>
+                    <value>bundlejre</value>
+                </option>
+                <option>
+                    <description>Your existing JRE will be used with discovery module.  Your existing JRE appears to be installed at &lt;JAVA_HOME&gt; : ${java_home}".</description>
+                    <image></image>
+                    <text>Use my existing Java 1.8 JRE for Discovery Module. JRE1.8.0_41 or later is required...</text>
+                    <value>defaultxyz</value>
+                </option>
+            </optionList>
+            <postShowPageActionList>
+                <if>
+                    <actionList>
+                        <setInstallerVariable>
+                            <name>bundle_java</name>
+                            <value>0</value>
+                            <ruleList>
+                                <compareValues>
+                                    <logic>equals</logic>
+                                    <value1>${java_setup_type}</value1>
+                                    <value2>defaultxyz</value2>
+                                </compareValues>
+                            </ruleList>
+                        </setInstallerVariable>
+                        <setInstallerVariable>
+                            <name>bundle_java</name>
+                            <value>1</value>
+                            <ruleList>
+                                <compareValues>
+                                    <logic>equals</logic>
+                                    <value1>${java_setup_type}</value1>
+                                    <value2>bundlejre</value2>
+                                </compareValues>
+                            </ruleList>
+                        </setInstallerVariable>
+                    </actionList>
+                </if>
+            </postShowPageActionList>
+            <ruleList>
+                <isTrue value="${java_autodetected}"/>
+                <isTrue value="${project.component(default).selected}"/>
+            </ruleList>
+        </choiceParameter>
+        <licenseParameter>
+            <name>java_license</name>
+            <title>Java License Agreement</title>
+            <description>Please read the following License Agreement. You must accept the terms of this agreement before continuing with the installation.</description>
+            <explanation></explanation>
+            <file>Licensejava.txt</file>
+            <htmlFile></htmlFile>
+            <insertBefore>installdir</insertBefore>
+            <wrapText>1</wrapText>
+            <ruleList>
+                <isTrue value="${bundle_java}"/>
+            </ruleList>
+        </licenseParameter>
+        <choiceParameter>
+            <name>install_java</name>
+            <title>Install Java JRE</title>
+            <description></description>
+            <explanation>The discovery module being installed requires version 1.8 of the Java runtime environment.  Java 1.8 does not appear to be installed on this machine.
+
+ Would you like the installer to continue and install it's bundled Java 8 for use only with Discovery module?
+
+Logi Analytics recommends that you install the bundled version of the Java 1.8. runtime. If this option is chosen, you will be presented with a dialog showing a click through license from Oracle Corporation which you must accept.
+ </explanation>
+            <value></value>
+            <default>bundlejava</default>
+            <allowEmptyValue>1</allowEmptyValue>
+            <displayType>radiobuttons</displayType>
+            <insertAfter>logi_license</insertAfter>
+            <ordering>default</ordering>
+            <width>40</width>
+            <optionList>
+                <option>
+                    <description></description>
+                    <image></image>
+                    <text>Yes, install bundled Java 1.8 now, for use only with the Discovery Module. </text>
+                    <value>bundlejava</value>
+                </option>
+                <option>
+                    <description></description>
+                    <image></image>
+                    <text>No, I'll download and Install Java 8 myself at later time.</text>
+                    <value>download</value>
+                </option>
+            </optionList>
+            <postShowPageActionList>
+                <if>
+                    <actionList>
+                        <setInstallerVariable>
+                            <name>bundle_java</name>
+                            <value>1</value>
+                            <ruleList>
+                                <compareValues>
+                                    <logic>equals</logic>
+                                    <value1>${install_java}</value1>
+                                    <value2>bundlejava</value2>
+                                </compareValues>
+                            </ruleList>
+                        </setInstallerVariable>
+                    </actionList>
+                </if>
+            </postShowPageActionList>
+            <ruleList>
+                <isFalse value="${java_autodetected}"/>
+                <isFalse value="${java_setup_page}"/>
+                <isTrue value="${project.component(default).selected}"/>
+            </ruleList>
+            <validationActionList>
+                <throwError>
+                    <text>Java JRE 8 is required to proceed with the installation. Please install it and relaunch this installer. For now, please select cancel to abort the installation.</text>
+                    <ruleList>
+                        <compareValues>
+                            <logic>equals</logic>
+                            <value1>${install_java}</value1>
+                            <value2>download</value2>
+                        </compareValues>
+                    </ruleList>
+                </throwError>
+            </validationActionList>
+        </choiceParameter>
+        <parameterGroup>
+            <name>UserData</name>
+            <title>Logi Services Admin Credentials.</title>
+            <explanation>User Name :              admin </explanation>
+            <value></value>
+            <default></default>
+            <parameterList>
+                <passwordParameter>
+                    <name>Userpasswd</name>
+                    <title>*Password :</title>
+                    <description>*Password :</description>
+                    <explanation>                                  Password must be between 6 to 50 characters.</explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <askForConfirmation>0</askForConfirmation>
+                    <descriptionRetype>*Confirm Password :</descriptionRetype>
+                    <width>40</width>
+                </passwordParameter>
+                <passwordParameter>
+                    <name>confirmpassword</name>
+                    <title>*Confirm Password :</title>
+                    <description>*Confirm Password :</description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <askForConfirmation>0</askForConfirmation>
+                    <descriptionRetype></descriptionRetype>
+                    <width>40</width>
+                </passwordParameter>
+                <stringParameter>
+                    <name>lastname</name>
+                    <title>*Last Name : </title>
+                    <description>*Last Name : </description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <width>40</width>
+                </stringParameter>
+                <stringParameter>
+                    <name>firstname</name>
+                    <title>*First Name :</title>
+                    <description>*First Name :</description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <width>40</width>
+                </stringParameter>
+                <stringParameter>
+                    <name>email</name>
+                    <title>*Email :</title>
+                    <description>*Email :</description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <width>40</width>
+                </stringParameter>
+            </parameterList>
+            <ruleList>
+                <fileTest>
+                    <condition>not_exists</condition>
+                    <path>${installdir}/uninstall.dat</path>
+                </fileTest>
+            </ruleList>
+            <validationActionList>
+                <throwError>
+                    <text>Password is required.</text>
+                    <ruleList>
+                        <compareText>
+                            <logic>equals</logic>
+                            <text></text>
+                            <value>${Userpasswd}</value>
+                        </compareText>
+                    </ruleList>
+                </throwError>
+                <throwError>
+                    <text>Password must be between 6 and 50 characters.</text>
+                    <ruleList>
+                        <regExMatch>
+                            <logic>does_not_match</logic>
+                            <pattern>^.{6,50}$</pattern>
+                            <text>${Userpasswd}</text>
+                        </regExMatch>
+                    </ruleList>
+                </throwError>
+                <throwError>
+                    <text>Please retype the password. </text>
+                    <ruleList>
+                        <compareText>
+                            <logic>equals</logic>
+                            <text></text>
+                            <value>${confirmpassword}</value>
+                        </compareText>
+                    </ruleList>
+                </throwError>
+                <throwError>
+                    <text>Passwords do not match.</text>
+                    <ruleList>
+                        <compareValues>
+                            <logic>does_not_equal</logic>
+                            <value1>${Userpasswd}</value1>
+                            <value2>${confirmpassword}</value2>
+                        </compareValues>
+                    </ruleList>
+                </throwError>
+                <throwError>
+                    <text>Last Name is required.</text>
+                    <ruleList>
+                        <compareText>
+                            <logic>equals</logic>
+                            <text></text>
+                            <value>${lastname}</value>
+                        </compareText>
+                    </ruleList>
+                </throwError>
+                <throwError>
+                    <text>First Name is required.</text>
+                    <ruleList>
+                        <compareText>
+                            <logic>equals</logic>
+                            <text></text>
+                            <value>${firstname}</value>
+                        </compareText>
+                    </ruleList>
+                </throwError>
+                <throwError>
+                    <text>Email is required.</text>
+                    <ruleList>
+                        <compareText>
+                            <logic>equals</logic>
+                            <text></text>
+                            <value>${email}</value>
+                        </compareText>
+                    </ruleList>
+                </throwError>
+                <throwError>
+                    <text>The provided value is not a valid email address.</text>
+                    <ruleList>
+                        <regExMatch>
+                            <logic>does_not_match</logic>
+                            <pattern>[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,9}</pattern>
+                            <text>${email}</text>
+                        </regExMatch>
+                    </ruleList>
+                </throwError>
+            </validationActionList>
+        </parameterGroup>
+    </parameterList>
+</project>
+
