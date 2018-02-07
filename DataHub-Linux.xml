@@ -1,0 +1,627 @@
+<project>
+    <shortName>DataHub</shortName>
+    <fullName>LogiDataHub</fullName>
+    <version>3.0</version>
+    <leftImage>supportfiles/logidhwelcome.png</leftImage>
+    <logoImage>supportfiles/logidatahub.png</logoImage>
+    <languageSelectionStyle>onlyEnglishNames</languageSelectionStyle>
+    <componentList>
+        <component>
+            <name>default</name>
+            <description>Default Component</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>1</selected>
+            <show>1</show>
+            <folderList>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfiles</name>
+                    <platforms>all</platforms>
+                </folder>
+                <folder>
+                    <description>infobright</description>
+                    <destination>${installdir}/supportfiles</destination>
+                    <name>infobright</name>
+                    <platforms>linux-x64</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>supportfiles/infobright.lic</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>supportfiles/infobright-iee_postgres-5.0.4-0-rhel_centos_7_64.rpm</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>supportfiles/LGV_PostgreSQL_DBCreation_Script_1.sql</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>doc</description>
+                    <destination>${installdir}/Documention</destination>
+                    <name>doc</name>
+                    <platforms>linux-x64</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>supportfiles/Infobright-IEE_Postgres-5.0.4-Release_Notes.pdf</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>supportfiles/Infobright-IEE_Postgres-5.0.4-User_Guide-1.0.pdf</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <postInstallationActionList>
+                <substitute>
+                    <files>${installdir}/supportfiles/LGV_PostgreSQL_DBCreation_Script_1.sql</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>CREATE DATABASE logidatahub</pattern>
+                            <value>CREATE DATABASE ${DBname}</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <writeFile>
+                    <path>${installdir}/supportfiles/datahub.sh</path>
+                    <text>cd ${installdir}/supportfiles
+ rpm -i infobright-iee_postgres-5.0.4-0-rhel_centos_7_64.rpm
+ service infobright-iee-postgres initdb </text>
+                </writeFile>
+                <writeFile>
+                    <path>${installdir}/supportfiles/ExecuteDB.sh</path>
+                    <text>export psqlexe=/usr/local/infobright-products/iee/postgres/5.0.4/
+export path=$path;$psqlexebin
+export PGCLIENTENCODING=UTF8
+psql -h localhost -p 5029 -U postgres -f LGV_PostgreSQL_DBCreation_Script_1.sql &gt; "${installdir}/LGV_PostgreSQL_DBCreation.log" 2&gt;&amp;1
+psql -h localhost -p 5029 -U postgres  -c "ALTER USER postgres with password '${Userpasswd}';" &gt;&gt; "${installdir}/LGV_PostgreSQL_DBCreation.log"</text>
+                </writeFile>
+                <changePermissions>
+                    <files>${installdir}/supportfiles/ExecuteDB.sh</files>
+                    <permissions>0755</permissions>
+                </changePermissions>
+                <changePermissions>
+                    <files>${installdir}/supportfiles/datahub.sh</files>
+                    <permissions>0755</permissions>
+                </changePermissions>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <customErrorMessage>Logi DataHub Database failed to install.</customErrorMessage>
+                    <program>${installdir}/supportfiles/datahub.sh</program>
+                    <programArguments></programArguments>
+                    <progressText>Please wait, Installing Logi DataHub Database Server ...</progressText>
+                    <onErrorActionList>
+                        <setInstallerVariable>
+                            <abortOnError>0</abortOnError>
+                            <name>infobrightError</name>
+                            <value>1</value>
+                        </setInstallerVariable>
+                    </onErrorActionList>
+                </runProgram>
+                <deleteFile>
+                    <path>${installdir}/supportfiles/infobright-iee_postgres-5.0.4-0-rhel_centos_7_64.rpm</path>
+                    <ruleList>
+                        <isFalse>
+                            <value>${infobrightError}</value>
+                        </isFalse>
+                    </ruleList>
+                </deleteFile>
+                <deleteFile>
+                    <path>/usr/local/infobright-products/iee/postgres/5.0.4/ib_data/infobright.lic</path>
+                </deleteFile>
+                <copyFile>
+                    <destination>/usr/local/infobright-products/iee/postgres/5.0.4/ib_data/</destination>
+                    <origin>${installdir}/supportfiles/infobright.lic</origin>
+                </copyFile>
+                <renameFile>
+                    <destination>/usr/local/infobright-products/iee/postgres/5.0.4/ib_data/infobright.cnf</destination>
+                    <origin>/usr/local/infobright-products/iee/postgres/5.0.4/ib_data/infobright.cnf.sample</origin>
+                </renameFile>
+                <substitute>
+                    <files>/usr/local/infobright-products/iee/postgres/5.0.4/pg_data/pg_hba.conf</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>host    all             all             127.0.0.1/32            ident</pattern>
+                            <value>host    all             all             0.0.0.0/0                  trust</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>local   all             all                                     peer</pattern>
+                            <value>local   all             all                                     trust</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>host    all             all             ::1/128                 ident</pattern>
+                            <value>host    all             all             ::1/128                 trust</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <substitute>
+                    <files>/usr/local/infobright-products/iee/postgres/5.0.4/pg_data/postgresql.conf</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>#listen_addresses = 'localhost'</pattern>
+                            <value>listen_addresses = '*'</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <runProgram>
+                    <program>/etc/init.d/infobright-iee-postgres</program>
+                    <programArguments>start</programArguments>
+                </runProgram>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <program>${installdir}/supportfiles/ExecuteDB.sh</program>
+                    <programArguments></programArguments>
+                    <onErrorActionList>
+                        <setInstallerVariable>
+                            <name>ExecuteDBError</name>
+                            <value>1</value>
+                        </setInstallerVariable>
+                    </onErrorActionList>
+                </runProgram>
+                <substitute>
+                    <files>/usr/local/infobright-products/iee/postgres/5.0.4/pg_data/pg_hba.conf</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>host    all             all             0.0.0.0/0                  trust</pattern>
+                            <value>host    all             all             0.0.0.0/0                  md5</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>local   all             all                                     trust</pattern>
+                            <value>local   all             all                                     md5</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>host    all             all             ::1/128                 trust</pattern>
+                            <value>host    all             all             ::1/128                 md5</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <program>/etc/init.d/infobright-iee-postgres</program>
+                    <programArguments>restart</programArguments>
+                </runProgram>
+                <deleteFile>
+                    <path>${installdir}/supportfiles</path>
+                    <ruleList>
+                        <isFalse>
+                            <value>${ExecuteDBError}</value>
+                        </isFalse>
+                    </ruleList>
+                </deleteFile>
+            </postInstallationActionList>
+            <postUninstallationActionList>
+                <deleteFile>
+                    <path>${installdir}</path>
+                </deleteFile>
+            </postUninstallationActionList>
+            <preUninstallationActionList>
+                <writeFile>
+                    <path>${installdir}/removeinfobright.sh</path>
+                    <text>rpm -e infobright-iee-postgres</text>
+                </writeFile>
+                <changePermissions>
+                    <files>${installdir}/removeinfobright.sh</files>
+                    <permissions>0755</permissions>
+                </changePermissions>
+                <runProgram>
+                    <program>${installdir}/removeinfobright.sh</program>
+                    <programArguments></programArguments>
+                    <ruleList>
+                        <fileExists>
+                            <path>/usr/local/infobright-products/iee/postgres/5.0.4/bin</path>
+                        </fileExists>
+                    </ruleList>
+                </runProgram>
+            </preUninstallationActionList>
+        </component>
+        <component>
+            <name>upgrade</name>
+            <description>upgrade</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>0</selected>
+            <show>0</show>
+            <folderList>
+                <folder>
+                    <description>infobright</description>
+                    <destination>${installdir}/supportfiles</destination>
+                    <name>infobright</name>
+                    <platforms>linux-x64</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>supportfiles/infobright-iee_postgres-5.0.4-0-rhel_centos_7_64.rpm</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>doc</description>
+                    <destination>${installdir}/Documentation</destination>
+                    <name>doc</name>
+                    <platforms>linux-x64</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>supportfiles/Infobright-IEE_Postgres-5.0.4-Release_Notes.pdf</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>supportfiles/Infobright-IEE_Postgres-5.0.4-User_Guide-1.0.pdf</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <postInstallationActionList>
+                <writeFile>
+                    <path>${installdir}/supportfiles/datahub.sh</path>
+                    <text>cd ${installdir}/supportfiles
+ rpm -U infobright-iee_postgres-5.0.4-0-rhel_centos_7_64.rpm</text>
+                </writeFile>
+                <changePermissions>
+                    <files>${installdir}/supportfiles/datahub.sh</files>
+                    <permissions>0755</permissions>
+                </changePermissions>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <customErrorMessage>Logi DataHub Database failed to install.</customErrorMessage>
+                    <program>${installdir}/supportfiles/datahub.sh</program>
+                    <programArguments></programArguments>
+                    <progressText>Please wait, Installing Logi DataHub Database Server ...</progressText>
+                    <onErrorActionList>
+                        <setInstallerVariable>
+                            <abortOnError>0</abortOnError>
+                            <name>infobrightError</name>
+                            <value>1</value>
+                        </setInstallerVariable>
+                    </onErrorActionList>
+                </runProgram>
+                <deleteFile>
+                    <abortOnError>0</abortOnError>
+                    <path>${installdir}/supportfiles/infobright-iee_postgres-5.0.4-0-rhel_centos_7_64.rpm</path>
+                    <ruleList>
+                        <isFalse>
+                            <value>${infobrightError}</value>
+                        </isFalse>
+                    </ruleList>
+                </deleteFile>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <program>/etc/init.d/infobright-iee-postgres</program>
+                    <programArguments>start</programArguments>
+                </runProgram>
+            </postInstallationActionList>
+            <postUninstallationActionList>
+                <deleteFile>
+                    <path>${installdir}</path>
+                </deleteFile>
+            </postUninstallationActionList>
+            <preUninstallationActionList>
+                <writeFile>
+                    <path>${installdir}/removeinfobright.sh</path>
+                    <text>rpm -e infobright-iee-postgres</text>
+                </writeFile>
+                <changePermissions>
+                    <files>${installdir}/removeinfobright.sh</files>
+                    <permissions>0755</permissions>
+                </changePermissions>
+                <runProgram>
+                    <program>${installdir}/removeinfobright.sh</program>
+                    <programArguments></programArguments>
+                    <ruleList>
+                        <fileExists>
+                            <path>/usr/local/infobright-products/iee/postgres/5.0.4/bin</path>
+                        </fileExists>
+                    </ruleList>
+                </runProgram>
+            </preUninstallationActionList>
+        </component>
+    </componentList>
+    <initializationActionList>
+        <logMessage>
+            <enableTimeStamp>0</enableTimeStamp>
+            <text>Version:- ${product_version}
+</text>
+            <timeStampFormat></timeStampFormat>
+        </logMessage>
+        <setInstallerVariable name="installation_registry_path" persist="1" value="~">
+            <ruleList>
+                <platformTest negate="1" type="windows"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="installation_registry_path" persist="1" value="/etc">
+            <ruleList>
+                <isTrue>
+                    <value>${installer_is_root_install}</value>
+                </isTrue>
+                <platformTest negate="1" type="windows"/>
+            </ruleList>
+        </setInstallerVariable>
+        <createTimeStamp>
+            <format>%Y%m%d%H%M%S</format>
+            <variable>timestamp</variable>
+        </createTimeStamp>
+    </initializationActionList>
+    <preInstallationActionList>
+        <foreach>
+            <values>version oldVersion installdir oldInstalldir</values>
+            <variables>name variable</variables>
+            <actionList>
+                <setInstallerVariable name="${variable}" value=""/>
+                <iniFileGet>
+                    <file>${installation_registry_path}/${project.fullName}.ini</file>
+                    <key>${name}</key>
+                    <section>details</section>
+                    <variable>${variable}</variable>
+                    <ruleList>
+                        <fileTest condition="exists" path="${installation_registry_path}/${project.fullName}.ini"/>
+                    </ruleList>
+                </iniFileGet>
+
+                <!-- <showInfo text="name : ${name}"/>
+                <showInfo text="variable : ${variable}"/>-->
+            </actionList>
+            <ruleList>
+                <platformTest negate="1" type="windows"/>
+            </ruleList>
+        </foreach>
+
+        <!-- Validate if the version bundled is valid for the update -->
+        <throwError>
+            <text>The existing installation of DataHub module is newer or same version. Aborting...</text>
+            <ruleList>
+                <compareVersions>
+                    <logic>greater_or_equal</logic>
+                    <version1>${oldVersion}</version1>
+                    <version2>${project.version}</version2>
+                </compareVersions>
+            </ruleList>
+        </throwError>
+
+        <!-- default installdir value -->
+        <setInstallerVariable>
+            <name>default_installdir</name>
+            <value>${platform_install_prefix}/${product_shortname}</value>
+        </setInstallerVariable>
+
+        <!-- old value for upgrade -->
+        <setInstallerVariable>
+            <name>default_installdir</name>
+            <value>${oldInstalldir}</value>
+            <ruleList>
+                <fileExists path="${oldInstalldir}/uninstall"/>
+            </ruleList>
+        </setInstallerVariable>
+        <componentSelection>
+            <deselect>default</deselect>
+            <select>upgrade</select>
+            <ruleList>
+                <fileExists path="${oldInstalldir}/uninstall"/>
+            </ruleList>
+        </componentSelection>
+        <actionGroup>
+            <actionList>
+                <!-- <showInfo>
+                    <text>An existing installation has been detected in ${installdir}.</text>
+                </showInfo>-->
+                <showQuestion>
+                    <default>yes</default>
+                    <text>A version of the DataHub module is already installed in ${installdir}. Would you like to upgrade to current version ${project.version}?
+Please note, clicking on Yes and then cancelling later will result in a corrupted Installer.</text>
+                    <title>DataHub Module Upgrade</title>
+                    <variable>shouldupgrade</variable>
+                </showQuestion>
+                <exit>
+                    <exitCode>1</exitCode>
+                    <ruleList>
+                        <isFalse>
+                            <value>${shouldupgrade}</value>
+                        </isFalse>
+                    </ruleList>
+                </exit>
+                <setInstallerVariable name="project.parameter(installdir).ask" value="0"/>
+            </actionList>
+
+            <!-- Assume an existing installation if ${installdir} directory exists -->
+            <ruleList>
+                <fileExists path="${oldInstalldir}/uninstall"/>
+
+                <!-- <fileTest condition="exists" path="${installdir}"/>-->
+            </ruleList>
+        </actionGroup>
+        <actionGroup>
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>0</showMessageOnError>
+            <actionList>
+                <showWarning>
+                    <text>There is an existing install of Infobright-iee-postgres on the machine. Please uninstall and install Logi DataHub. Installer will exit now.</text>
+                </showWarning>
+                <exit>
+                    <abortOnError>0</abortOnError>
+                    <exitCode>1</exitCode>
+                </exit>
+            </actionList>
+            <ruleList>
+                <fileExists>
+                    <path>/etc/init.d/infobright-iee-postgres</path>
+                </fileExists>
+                <fileTest>
+                    <condition>not_exists</condition>
+                    <path>${installdir}/uninstall</path>
+                </fileTest>
+            </ruleList>
+        </actionGroup>
+    </preInstallationActionList>
+    <postInstallationActionList>
+        <foreach>
+            <values>version "${project.version}" installdir "${installdir}"</values>
+            <variables>name variable</variables>
+            <actionList>
+                <iniFileSet>
+                    <file>${installation_registry_path}/${project.fullName}.ini</file>
+                    <key>${name}</key>
+                    <section>details</section>
+                    <value>${variable}</value>
+                </iniFileSet>
+            </actionList>
+            <ruleList>
+                <platformTest negate="1" type="windows"/>
+            </ruleList>
+        </foreach>
+        <addFilesToUninstaller files="${installation_registry_path}/${project.fullName}.ini"/>
+    </postInstallationActionList>
+    <disableSplashScreen>1</disableSplashScreen>
+    <enableRollback>1</enableRollback>
+    <enableTimestamp>1</enableTimestamp>
+    <height>500</height>
+    <installationLogFile>${installdir}/${project.shortName}-${product_version}-installLog.log</installationLogFile>
+    <licenseFileEncoding>utf-8</licenseFileEncoding>
+    <readmeFileEncoding>utf-8</readmeFileEncoding>
+    <requireInstallationByRootUser>1</requireInstallationByRootUser>
+    <rollbackBackupDirectory>${system_temp_directory}/backup</rollbackBackupDirectory>
+    <saveRelativePaths>1</saveRelativePaths>
+    <showFileUnpackingProgress>0</showFileUnpackingProgress>
+    <uninstallationLogFile>${system_temp_directory}/${project.shortName}-uninstallation.log</uninstallationLogFile>
+    <vendor>LogiAnalytics</vendor>
+    <width>600</width>
+    <windows64bitMode>1</windows64bitMode>
+    <parameterList>
+        <parameterGroup>
+            <name>Userdata</name>
+            <title>Logi DataHub Repository Account</title>
+            <explanation>Superuser :              postgres</explanation>
+            <value></value>
+            <default></default>
+            <parameterList>
+                <passwordParameter>
+                    <name>Userpasswd</name>
+                    <title>*Password :</title>
+                    <description>*Password :</description>
+                    <explanation>                                  Password must be between 6 to 50 characters.</explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <askForConfirmation>0</askForConfirmation>
+                    <descriptionRetype></descriptionRetype>
+                    <width>40</width>
+                    <validationActionList>
+                        <throwError>
+                            <text>Password is required.</text>
+                            <ruleList>
+                                <compareText>
+                                    <logic>equals</logic>
+                                    <text></text>
+                                    <value>${Userpasswd}</value>
+                                </compareText>
+                            </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>Password must be between 6 and 50 characters.</text>
+                            <ruleList>
+                                <regExMatch>
+                                    <logic>does_not_match</logic>
+                                    <pattern>^.{6,50}$</pattern>
+                                    <text>${Userpasswd}</text>
+                                </regExMatch>
+                            </ruleList>
+                        </throwError>
+                    </validationActionList>
+                </passwordParameter>
+                <passwordParameter>
+                    <name>confirmpassword</name>
+                    <title>*Confirm Password :</title>
+                    <description>*Confirm Password :</description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <askForConfirmation>0</askForConfirmation>
+                    <descriptionRetype></descriptionRetype>
+                    <width>40</width>
+                    <validationActionList>
+                        <throwError>
+                            <text>Please retype the password. </text>
+                            <ruleList>
+                                <compareText>
+                                    <logic>equals</logic>
+                                    <text></text>
+                                    <value>${confirmpassword}</value>
+                                </compareText>
+                            </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>Passwords do not match.</text>
+                            <ruleList>
+                                <compareValues>
+                                    <logic>does_not_equal</logic>
+                                    <value1>${Userpasswd}</value1>
+                                    <value2>${confirmpassword}</value2>
+                                </compareValues>
+                            </ruleList>
+                        </throwError>
+                    </validationActionList>
+                </passwordParameter>
+                <stringParameter>
+                    <name>DBname</name>
+                    <title>DBname</title>
+                    <description>*Database :</description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <width>40</width>
+                    <validationActionList>
+                        <throwError>
+                            <text>Please specify database name.</text>
+                            <ruleList>
+                                <compareText>
+                                    <logic>equals</logic>
+                                    <text></text>
+                                    <value>${DBname}</value>
+                                </compareText>
+                            </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>Database name should start with either an alphabet character or "_". Subsequent characters can be alphanumeric and characters, "_" or "$". Mininum and maximum characters are 1 to 63.</text>
+                            <ruleList>
+                                <regExMatch>
+                                    <logic>does_not_match</logic>
+                                    <pattern>^[a-zA-Z_][a-zA-Z0-9$_].{0,63}$</pattern>
+                                    <text>${DBname}</text>
+                                </regExMatch>
+                            </ruleList>
+                        </throwError>
+                    </validationActionList>
+                </stringParameter>
+            </parameterList>
+            <ruleList>
+                <fileTest>
+                    <condition>not_exists</condition>
+                    <path>${installdir}/uninstall.dat</path>
+                </fileTest>
+            </ruleList>
+        </parameterGroup>
+        <directoryParameter>
+            <name>installdir</name>
+            <description>Installer.Parameter.installdir.description</description>
+            <explanation>Installer.Parameter.installdir.explanation</explanation>
+            <value></value>
+            <default>${default_installdir}</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <cliOptionName>prefix</cliOptionName>
+            <insertBefore>readytoinstall</insertBefore>
+            <mustBeWritable>1</mustBeWritable>
+            <mustExist>0</mustExist>
+            <width>30</width>
+        </directoryParameter>
+        <licenseParameter>
+            <name>datahub_license</name>
+            <title>Logi Analytics License Agreement</title>
+            <description>Please read the following License Agreement. You must accept the terms of this agreement before continuing with the installation.</description>
+            <explanation></explanation>
+            <file>supportfiles/Datahublicense.txt</file>
+            <htmlFile></htmlFile>
+            <insertAfter>welcome</insertAfter>
+            <wrapText>1</wrapText>
+        </licenseParameter>
+    </parameterList>
+</project>
+

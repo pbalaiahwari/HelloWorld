@@ -1,0 +1,602 @@
+<project>
+    <shortName>DataHub</shortName>
+    <fullName>Logi DataHub</fullName>
+    <version>3.0</version>
+    <leftImage>supportfiles/logidhwelcome.png</leftImage>
+    <logoImage>supportfiles/logidatahub.png</logoImage>
+    <languageSelectionStyle>onlyEnglishNames</languageSelectionStyle>
+    <componentList>
+        <component>
+            <name>default</name>
+            <description>Default Component</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>1</selected>
+            <show>0</show>
+            <folderList>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfiles</name>
+                    <platforms>all</platforms>
+                    <shortcutList>
+                        <shortcut>
+                            <comment>Uninstall</comment>
+                            <exec>${installdir}/${uninstallerName}</exec>
+                            <icon></icon>
+                            <name>Uninstall ${product_fullname}</name>
+                            <path>${installdir}</path>
+                            <platforms>all</platforms>
+                            <runAsAdmin>0</runAsAdmin>
+                            <runInTerminal>0</runInTerminal>
+                            <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                            <windowsExecArgs></windowsExecArgs>
+                            <windowsIcon></windowsIcon>
+                            <windowsPath>${installdir}</windowsPath>
+                        </shortcut>
+                    </shortcutList>
+                </folder>
+                <folder>
+                    <description>infobright</description>
+                    <destination>${installdir}\supportfiles</destination>
+                    <name>infobright</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>supportfiles/infobright-iee_postgres-5.0.4-0-win_2008_2012_64.exe</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>supportfiles/infobright.cnf</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>supportfiles/infobright.lic</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>supportfiles/pg_hba.conf</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>supportfiles/postgresql.conf</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>supportfiles/psqlclient/psql.exe</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>supportfiles/LGV_PostgreSQL_DBCreation_Script_1.sql</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <destination>${installdir}</destination>
+                    <name>icon</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>supportfiles/Logohb.ico</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>doc</description>
+                    <destination>${installdir}/Documentation</destination>
+                    <name>doc</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>supportfiles/Infobright-IEE_Postgres-5.0.4-User_Guide-1.0.pdf</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>supportfiles/Infobright-IEE_Postgres-5.0.4-Release_Notes.pdf</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <postInstallationActionList>
+                <substitute>
+                    <files>${installdir}\supportfiles\LGV_PostgreSQL_DBCreation_Script_1.sql</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>CREATE DATABASE logidatahub</pattern>
+                            <value>CREATE DATABASE ${DBname}</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <writeFile>
+                    <path>${installdir}\supportfiles\datahub.bat</path>
+                    <text>@ECHO OFF
+"${installdir}\supportfiles\infobright-iee_postgres-5.0.4-0-win_2008_2012_64.exe" /S /D=${installdir}\Infobright-postgres</text>
+                </writeFile>
+                <writeFile>
+                    <path>${installdir}\supportfiles\ExecuteDB.bat</path>
+                    <text>@ECHO OFF
+SET psqlexe=${installdir}
+SET path=%path%;%psqlexe%Infobright-postgres\bin
+SET PGCLIENTENCODING=UTF8
+psql -h localhost -p 5029 -U postgres -f LGV_PostgreSQL_DBCreation_Script_1.sql &gt; "${installdir}\LGV_PostgreSQL_DBCreation.log" 2&gt;&amp;1
+psql -h localhost -p 5029 -U postgres  -c "ALTER USER postgres with password '${Userpasswd}';" &gt;&gt; "${installdir}\LGV_PostgreSQL_DBCreation.log"</text>
+                </writeFile>
+                <actionGroup>
+                    <actionList>
+                        <registrySet>
+                            <key>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\${project.windowsARPRegistryPrefix}</key>
+                            <name>Publisher</name>
+                            <type>REG_SZ</type>
+                            <value>Logi Analytics,Inc</value>
+                        </registrySet>
+                    </actionList>
+                </actionGroup>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <customErrorMessage>Logi DataHub Database failed to install.</customErrorMessage>
+                    <program>${installdir}\supportfiles\datahub.bat</program>
+                    <programArguments></programArguments>
+                    <progressText>Please wait, Installing Logi DataHub Database Server ...</progressText>
+                    <onErrorActionList>
+                        <setInstallerVariable>
+                            <abortOnError>0</abortOnError>
+                            <name>infobrightError</name>
+                            <value>1</value>
+                        </setInstallerVariable>
+                    </onErrorActionList>
+                </runProgram>
+                <deleteFile>
+                    <path>${installdir}\supportfiles\infobright-iee_postgres-5.0.4-0-win_2008_2012_64.exe</path>
+                    <ruleList>
+                        <isFalse>
+                            <value>${infobrightError}</value>
+                        </isFalse>
+                    </ruleList>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}\Infobright-postgres\pg_data\pg_hba.conf</path>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}\Infobright-postgres\pg_data\postgresql.conf</path>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}\Infobright-postgres\ib_data\infobright.lic</path>
+                </deleteFile>
+                <copyFile>
+                    <destination>${installdir}\Infobright-postgres\pg_data\</destination>
+                    <origin>${installdir}\supportfiles\postgresql.conf</origin>
+                </copyFile>
+                <copyFile>
+                    <destination>${installdir}\Infobright-postgres\pg_data\</destination>
+                    <origin>${installdir}\supportfiles\pg_hba.conf</origin>
+                </copyFile>
+                <copyFile>
+                    <destination>${installdir}\Infobright-postgres\ib_data\</destination>
+                    <origin>${installdir}\supportfiles\infobright.lic</origin>
+                </copyFile>
+                <copyFile>
+                    <destination>${installdir}\Infobright-postgres\ib_data\</destination>
+                    <origin>${installdir}\supportfiles\infobright.cnf</origin>
+                </copyFile>
+                <startWindowsService>
+                    <delay>15000</delay>
+                    <displayName></displayName>
+                    <serviceName>infobright-iee-postgres</serviceName>
+                </startWindowsService>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <program>${installdir}\supportfiles\ExecuteDB.bat</program>
+                    <programArguments></programArguments>
+                    <onErrorActionList>
+                        <setInstallerVariable>
+                            <name>ExecuteDBError</name>
+                            <value>1</value>
+                        </setInstallerVariable>
+                    </onErrorActionList>
+                </runProgram>
+                <substitute>
+                    <files>${installdir}\Infobright-postgres\pg_data\pg_hba.conf</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>host    all             all             0.0.0.0/0               trust</pattern>
+                            <value>host    all             all             0.0.0.0/0               md5</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>host    all             all             ::1/128                 trust</pattern>
+                            <value>host    all             all             ::1/128                 md5</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <deleteFile>
+                    <path>${installdir}\supportfiles</path>
+                    <ruleList>
+                        <isFalse>
+                            <value>${ExecuteDBError}</value>
+                        </isFalse>
+                    </ruleList>
+                </deleteFile>
+            </postInstallationActionList>
+            <postUninstallationActionList>
+                <runProgram>
+                    <program>${installdir}\Infobright-postgres\uninst.exe</program>
+                    <programArguments>/S</programArguments>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\Infobright-postgres\uninst.exe</path>
+                        </fileExists>
+                    </ruleList>
+                </runProgram>
+            </postUninstallationActionList>
+            <startMenuShortcutList>
+                <startMenuShortcut>
+                    <comment>Uninstall ${product_fullname}</comment>
+                    <name>Uninstall ${product_fullname}</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon></windowsIcon>
+                    <windowsPath>${installdir}/</windowsPath>
+                </startMenuShortcut>
+            </startMenuShortcutList>
+        </component>
+        <component>
+            <name>upgrade</name>
+            <description>upgrade</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>0</selected>
+            <show>0</show>
+            <folderList>
+                <folder>
+                    <description>infobright</description>
+                    <destination>${installdir}/supportfiles</destination>
+                    <name>infobright</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>supportfiles/infobright-iee_postgres-5.0.4-0-win_2008_2012_64.exe</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>doc</description>
+                    <destination>${installdir}/Documentation</destination>
+                    <name>doc</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>supportfiles/Infobright-IEE_Postgres-5.0.4-Release_Notes.pdf</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>supportfiles/Infobright-IEE_Postgres-5.0.4-User_Guide-1.0.pdf</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <postInstallationActionList>
+                <writeFile>
+                    <path>${installdir}\supportfiles\datahub.bat</path>
+                    <text>"${installdir}\supportfiles\infobright-iee_postgres-5.0.4-0-win_2008_2012_64.exe" /S /D=${installdir}\Infobright-postgres
+</text>
+                </writeFile>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <customErrorMessage>Logi DataHub Database failed to install.</customErrorMessage>
+                    <program>${installdir}\supportfiles\datahub.bat</program>
+                    <programArguments></programArguments>
+                    <progressText>Please wait, Installing Logi DataHub Database Server ...</progressText>
+                </runProgram>
+                <deleteFile>
+                    <path>${installdir}\supportfiles</path>
+                </deleteFile>
+                <startWindowsService>
+                    <delay>15000</delay>
+                    <displayName></displayName>
+                    <serviceName>infobright-iee-postgres</serviceName>
+                </startWindowsService>
+            </postInstallationActionList>
+            <postUninstallationActionList>
+                <runProgram>
+                    <program>${installdir}\Infobright-postgres\uninst.exe</program>
+                    <programArguments>/S</programArguments>
+                    <ruleList>
+                        <fileExists>
+                            <path>${installdir}\Infobright-postgres\uninst.exe</path>
+                        </fileExists>
+                    </ruleList>
+                </runProgram>
+            </postUninstallationActionList>
+            <preUninstallationActionList>
+                <deleteFile>
+                    <path>${installdir}\*</path>
+                </deleteFile>
+            </preUninstallationActionList>
+        </component>
+    </componentList>
+    <initializationActionList>
+        <logMessage>
+            <abortOnError>0</abortOnError>
+            <enableTimeStamp>0</enableTimeStamp>
+            <text>Version:- ${product_version}</text>
+        </logMessage>
+        <registryGet>
+            <key>HKEY_LOCAL_MACHINE\Software\${project.windowsSoftwareRegistryPrefix}</key>
+            <name>Location</name>
+            <variable>installdir</variable>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </registryGet>
+        <createTimeStamp>
+            <format>%Y%m%d%H%M%S</format>
+            <variable>timestamp</variable>
+        </createTimeStamp>
+    </initializationActionList>
+    <preInstallationActionList>
+        <setWindowsACL>
+            <action>allow</action>
+            <files>${installdir}/*</files>
+        </setWindowsACL>
+        <componentSelection>
+            <deselect>default</deselect>
+            <select>upgrade</select>
+            <ruleList>
+                <fileExists path="${installdir}/uninstall.exe"/>
+            </ruleList>
+        </componentSelection>
+        <actionGroup>
+            <actionList>
+                <!-- <showInfo>
+                    <text>An existing installation has been detected in ${installdir}.</text>
+                </showInfo>-->
+                <showQuestion>
+                    <default>yes</default>
+                    <text>A version of the Data Hub is already installed in ${installdir}. Would you like to upgrade to current version ${project.version}?
+Please note, clicking on Yes and then cancelling later will result in a corrupted Installer.</text>
+                    <title>Data Hub Upgrade</title>
+                    <variable>shouldupgrade</variable>
+                </showQuestion>
+                <exit>
+                    <exitCode>1</exitCode>
+                    <ruleList>
+                        <isFalse>
+                            <value>${shouldupgrade}</value>
+                        </isFalse>
+                    </ruleList>
+                </exit>
+                <setInstallerVariable name="project.parameter(installdir).ask" value="0"/>
+            </actionList>
+
+            <!-- Assume an existing installation if ${installdir} directory exists -->
+            <ruleList>
+                <fileExists path="${installdir}/uninstall.exe"/>
+
+                <!-- <fileTest condition="exists" path="${installdir}"/>-->
+            </ruleList>
+        </actionGroup>
+        <actionGroup>
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>0</showMessageOnError>
+            <actionList>
+                <showWarning>
+                    <text>There is an existing install of Infobright-iee-postgres on the machine. Please uninstall and install Logi DataHub. Installer will exit now.</text>
+                </showWarning>
+                <exit>
+                    <abortOnError>0</abortOnError>
+                    <exitCode>1</exitCode>
+                </exit>
+            </actionList>
+            <ruleList>
+                <registryTest>
+                    <key>HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\infobright-iee-postgres</key>
+                    <logic>is_not_empty</logic>
+                    <name>infobright</name>
+                </registryTest>
+                <fileTest>
+                    <condition>not_exists</condition>
+                    <path>${installdir}\uninstall.exe</path>
+                </fileTest>
+            </ruleList>
+        </actionGroup>
+    </preInstallationActionList>
+    <readyToInstallActionList>
+        <stopWindowsService>
+            <delay>15000</delay>
+            <displayName></displayName>
+            <serviceName>infobright-iee-postgres</serviceName>
+            <ruleList>
+                <windowsServiceTest>
+                    <condition>exists</condition>
+                    <service>infobright-iee-postgres</service>
+                </windowsServiceTest>
+                <windowsServiceTest>
+                    <condition>is_running</condition>
+                    <service>infobright-iee-postgres</service>
+                </windowsServiceTest>
+                <fileExists path="${installdir}/uninstall.exe"/>
+            </ruleList>
+        </stopWindowsService>
+        <actionGroup>
+            <actionList>
+                <registryGet>
+                    <key>HKEY_LOCAL_MACHINE\Software\${project.windowsSoftwareRegistryPrefix}</key>
+                    <name>Version</name>
+                    <variable>oldVersion</variable>
+                </registryGet>
+
+                <!-- Delete the old ARP registry keys -->
+                <registryDelete>
+                    <key>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${project.fullName} ${oldVersion}</key>
+                    <name></name>
+                </registryDelete>
+                <registryDelete>
+                    <key>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Management\ARPCache\${project.fullName} ${oldVersion}</key>
+                    <name></name>
+                </registryDelete>
+            </actionList>
+            <ruleList>
+                <platformTest type="windows"/>
+
+                <!--<isTrue value="${isUpgradeMode}"/>-->
+                <fileExists path="${installdir}/uninstall.exe"/>
+            </ruleList>
+        </actionGroup>
+    </readyToInstallActionList>
+    <disableSplashScreen>1</disableSplashScreen>
+    <enableRollback>1</enableRollback>
+    <enableTimestamp>1</enableTimestamp>
+    <height>420</height>
+    <installationLogFile>${installdir}/${project.shortName}-${product_version}-installLog.log</installationLogFile>
+    <licenseFileEncoding>utf-8</licenseFileEncoding>
+    <productDisplayIcon>${installdir}/Logohb.ico</productDisplayIcon>
+    <readmeFileEncoding>utf-8</readmeFileEncoding>
+    <requireInstallationByRootUser>1</requireInstallationByRootUser>
+    <rollbackBackupDirectory>${system_temp_directory}/backup</rollbackBackupDirectory>
+    <saveRelativePaths>1</saveRelativePaths>
+    <showFileUnpackingProgress>0</showFileUnpackingProgress>
+    <signWindowsUninstaller>1</signWindowsUninstaller>
+    <uninstallationLogFile>${system_temp_directory}/${project.shortName}-uninstallation-${timestamp}.log</uninstallationLogFile>
+    <vendor>Logi Analytics</vendor>
+    <width>600</width>
+    <windows64bitMode>1</windows64bitMode>
+    <windowsExecutableIcon>supportfiles/Logohb.ico</windowsExecutableIcon>
+    <windowsSigningPkcs12File>supportfiles/Logi Analytics, Inc_.pfx</windowsSigningPkcs12File>
+    <windowsSigningPkcs12Password>logipass</windowsSigningPkcs12Password>
+    <windowsSigningTimestampServer>http://timestamp.digicert.com</windowsSigningTimestampServer>
+    <windowsUninstallerExecutableIcon>supportfiles/Logohb.ico</windowsUninstallerExecutableIcon>
+    <parameterList>
+        <parameterGroup>
+            <name>Userdata</name>
+            <title>Logi DataHub Repository Account</title>
+            <explanation>Superuser :                     postgres</explanation>
+            <value></value>
+            <default></default>
+            <parameterList>
+                <passwordParameter>
+                    <name>Userpasswd</name>
+                    <title>*Password :</title>
+                    <description>*Password :</description>
+                    <explanation>                                         Password must be between 6 to 50 characters.</explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <askForConfirmation>0</askForConfirmation>
+                    <descriptionRetype></descriptionRetype>
+                    <width>40</width>
+                    <validationActionList>
+                        <throwError>
+                            <text>Password is required.</text>
+                            <ruleList>
+                                <compareText>
+                                    <logic>equals</logic>
+                                    <text></text>
+                                    <value>${Userpasswd}</value>
+                                </compareText>
+                            </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>Password must be between 6 and 50 characters.</text>
+                            <ruleList>
+                                <regExMatch>
+                                    <logic>does_not_match</logic>
+                                    <pattern>^.{6,50}$</pattern>
+                                    <text>${Userpasswd}</text>
+                                </regExMatch>
+                            </ruleList>
+                        </throwError>
+                    </validationActionList>
+                </passwordParameter>
+                <passwordParameter>
+                    <name>confirmpassword</name>
+                    <title>*Confirm Password :</title>
+                    <description>*Confirm Password :</description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <askForConfirmation>0</askForConfirmation>
+                    <descriptionRetype></descriptionRetype>
+                    <width>40</width>
+                    <validationActionList>
+                        <throwError>
+                            <text>Please retype the password. </text>
+                            <ruleList>
+                                <compareText>
+                                    <logic>equals</logic>
+                                    <text></text>
+                                    <value>${confirmpassword}</value>
+                                </compareText>
+                            </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>Passwords do not match.</text>
+                            <ruleList>
+                                <compareValues>
+                                    <logic>does_not_equal</logic>
+                                    <value1>${Userpasswd}</value1>
+                                    <value2>${confirmpassword}</value2>
+                                </compareValues>
+                            </ruleList>
+                        </throwError>
+                    </validationActionList>
+                </passwordParameter>
+                <stringParameter>
+                    <name>DBname</name>
+                    <title>DBname</title>
+                    <description>*Database :</description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <width>40</width>
+                    <validationActionList>
+                        <throwError>
+                            <text>Please specify database name.</text>
+                            <ruleList>
+                                <compareText>
+                                    <logic>equals</logic>
+                                    <text></text>
+                                    <value>${DBname}</value>
+                                </compareText>
+                            </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>Database name should start with either an alphabet character or "_". Subsequent characters can be alphanumeric and characters, "_" or "$". Mininum and maximum characters are 1 to 63.</text>
+                            <ruleList>
+                                <regExMatch>
+                                    <logic>does_not_match</logic>
+                                    <pattern>^[a-zA-Z_][a-zA-Z0-9$_].{0,63}$</pattern>
+                                    <text>${DBname}</text>
+                                </regExMatch>
+                            </ruleList>
+                        </throwError>
+                    </validationActionList>
+                </stringParameter>
+            </parameterList>
+            <ruleList>
+                <fileTest>
+                    <condition>not_exists</condition>
+                    <path>${installdir}/uninstall.exe</path>
+                </fileTest>
+            </ruleList>
+        </parameterGroup>
+        <directoryParameter>
+            <name>installdir</name>
+            <description>Installer.Parameter.installdir.description</description>
+            <explanation>Installer.Parameter.installdir.explanation</explanation>
+            <value></value>
+            <default>C:\Program Files\Logi Analytics\DataHub</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <cliOptionName>prefix</cliOptionName>
+            <insertBefore>readytoinstall</insertBefore>
+            <mustBeWritable>1</mustBeWritable>
+            <mustExist>0</mustExist>
+            <width>40</width>
+        </directoryParameter>
+        <licenseParameter>
+            <name>datahub_license</name>
+            <title>Logi Analytics License Agreement</title>
+            <description>Please read the following License Agreement. You must accept the terms of this agreement before continuing with the installation.</description>
+            <explanation></explanation>
+            <file>supportfiles/Datahublicense.txt</file>
+            <htmlFile></htmlFile>
+            <insertAfter>welcome</insertAfter>
+            <wrapText>1</wrapText>
+        </licenseParameter>
+    </parameterList>
+</project>
+
