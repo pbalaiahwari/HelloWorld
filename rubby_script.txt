@@ -86,3 +86,61 @@ create user
 	  vars_prompt:
 	   - name: your_name
 	     prompt: please enter the package name
+46.handler_section for only task section is used. like start service is the handler when tomcat is installed in task.
+47.task
+	name
+	action
+	notify: restart httpd
+   handlers:
+      - name: restart httpd 
+	action: service name=httpd state=restarted
+48.--- #outline to playbook translation
+- host demo
+  user: ansible
+  sudo: yes
+  gather_facts: yes
+  tasks:
+    - name: date/time stamp
+      raw: /usr/bin/date > /home/ansible/playbook_start.log
+    - name: install apache
+      yum: pkg-httpd state=latest
+      notify: restart the httpd
+    - name: log all packages installed
+      raw: yum list installed > /home/ansible/playbook_start.log
+    - name: date/time stamp
+      raw: /usr/bin/date > /home/ansible/playbook_start.log
+  handlers:
+    - name: restart the httpd
+      action: service name=httpd state=restarted
+49.how to run tasks parallel async: 300 and poll: 3
+50.loops - name: add a list of users
+	   user: name={{ item }} state=present
+	   with_items:
+		- user1
+		- user2
+		- user3
+51.conditionals
+	tasks: 
+	  - name: install httpd
+	    command: apt-get -y install apache2
+	    when: ansible_os_family == "Debian" 
+	  - name: install httpd
+	    command: yum -y install apache2
+	    when: ansible_os_family == "RedHat"
+52.tasks:
+- commad: echo {{ item }}
+  with_items: [0,2,4,6,8,10]
+  when: item > 5
+53.do-until
+	tasks: 
+	  - name: install apache
+	    yum: pkg=httpd state=latest
+	  - name: verify service status
+	    shell: systemctl status httpd
+	    register: result
+	    until: result.stdout.find("active(running)") != -1
+	    retries: 5
+	    delay: 5 
+	  - debug: var=result
+diff between raw and shell raw won't give out put shell will provide output 
+54. 
