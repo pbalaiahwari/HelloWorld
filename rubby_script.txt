@@ -1,0 +1,88 @@
+file 'filename' do
+content 'text'
+mode '0777'
+action :create | delete
+owner 'name of the user'
+end
+
+package 'name' do
+action :install|remove|upgrade
+end
+
+
+
+
+
+
+ansible
+1.yum install epel-release
+2.yum update
+3.yum -y install ansible
+create user
+4.ansible --version
+5.adduser ansible
+6.passwd ansible
+7.visudo
+	ansible ALL=(ALL) NOPASSWD: ALL
+8.change user to ansible:- su - ansible
+9.ssh-keygen command to access all nodes with out reistrictions.
+10.copy the ssh keys command:- ssh-copy-id ansible@<testmachie>
+11.ssh-copy-id localhost
+12.add hosts or node in /etc/ansible/hosts command:- sudo vi hosts its an ini file
+	example:- [demo]
+		   ip-address
+13.select name of the machine by groupname[0] --pick the first machine in the group
+14.groupname[1] --pick the second machine in the group
+15.range of machines groupname[0:1]  --pick two machines 1 and 2 
+16. two groups groupname1:groupname2
+17.ansible all --list-host
+18.ansible demo --list-host
+19.ansible demo[0] --list-host
+20.ansible demo -a "command"
+21.ansible demo -s -a "command" for sudo prevelige.
+22.ansible <host> -a <command> -m <module>
+23.ansible demo -m copy -a "src=filename dest=/home/ansible/filename"
+24.yellow changed green no change
+25.ansible demo -s -m yum -a "pkg=httpd state=installed|latest|absent"
+26.ansible demo -s -m service -a "name=httpd state=started|restarted|stopped"  http://34.212.102.102/
+27.create user account ansible demo -s -m user -a "name=test state= absent"
+28.add/remove cron jobs ansible demo -m crom -a "name='crontest' minute='30' hour='20' job='ls > /tmp/log.txt'"
+29.ansible demo -m crom -a "name='crontest' state=absent" comma will seperate the number of crons
+30.ansible demo -m setup -a "filter=*ipv4*" if you want to see all remove filters
+31.we can't ise anisible command every time so there is a yaml or yml files called playbook. file should begin with --- and end with ...
+32."- " followed by value same indentation for every thing. if any keys are specified than there should be "name: value"
+33.playbooks is composed of one or more plays in a list
+34.goal of a play is to map group of hosts to run tasks.
+35.task is nothing more than a call to an ansible module.
+36.playbook divided into sections target_section, variable_section and task_section
+37. target_section defines the hosts against which playbooks tasks has to be executed.
+38.variable_section defines variables.
+39.task_section list all modules to run in a order.
+40.playbook should be a yml files "mkdir playbook" create a file "first.yml"
+41.to run playbook ansible-playbook first.yml
+42.target_section 
+   hosts: all
+   user: ansible
+   sudo: yes    #yes or no
+   connection: ssh #ssh or paramico
+   gather_facts: no #yes or no
+43.task_section
+	---
+	- host: demo
+	  user: ansible
+	  sudo: yes
+	  connection: ssh
+	  gather_facts: no
+	  tasks:
+	   - name: install httpd server on centos 7
+	     ## option ## action: yum name=httpd state=installed
+	     yum: pkg=httpd state=installed
+44.variable_section 
+	- hosts: demo
+	  vars:
+	    username: test
+45.we ccan define in tsk or in a variable file and add the var file in task file from script or to prompt while use 
+	- hosts: demo
+	  vars_prompt:
+	   - name: your_name
+	     prompt: please enter the package name
