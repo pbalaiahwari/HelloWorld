@@ -143,4 +143,50 @@ create user
 	    delay: 5 
 	  - debug: var=result
 diff between raw and shell raw won't give out put shell will provide output 
-54. 
+54. vault is a place were we keep all belongings to keep sensitive data so that no other can read. using password to read or edit playbook.
+55.ansible-vault create playbook.yml
+56.ansible-vault edit playbbok.yml
+57.ansible-vault rekey playbbok.yml
+58.ansible-vault decrypt playbbok.yml
+59.ansible-vault encrypt playbbok.yml add's a password to existing file.
+60.create includestat.yml so that we can use it again and again where ever we need.
+	- name: install httpd
+	  yum: pkg-httpd state=latest
+61.- host demo
+  user: ansible
+  sudo: yes
+  gather_facts: yes
+  tasks:
+    - name: date/time stamp
+      raw: /usr/bin/date > /home/ansible/playbook_start.log
+    - include: includestat.yml
+    - name: verify the httpd installed
+      raw: yum list installed | grep httpd > /tmp/result.log
+62.what is tags? it is used when there is a large playbook if you want to run only some specified tasks than use tasks.
+63.tasks:
+     -name: firstname
+      raw: echo "task" > /tmp/log.log
+      tags:
+	- firstname
+64. ansible-playbook playbook.yml --tags "firstname"
+65.if we want to execute all tasks except the tags. ansible-playbook playbook.yml --skip-tags "firstname"
+66.roles creating roles framework 
+	roles/<rolename>/
+		tasks/main.yml
+		vars/main.yml
+		handlers/main.yml
+		default/main.yml
+		meta/main.yml
+67.if we want to run other than roles inclued pre_tasks or post_tasks
+68.ansible looks for roles in present directory or in /etc/ansible/roles/ or configure it in ansible_cong in /etc/ansible/ansible_config
+69.we can specify a conditoin in master playbook for which role to select by giving rules.
+70.roles:
+	- { role: redhatwebservers, when: ansible_os_family == "Redhat" }
+	- { role: debianwebservers, when: ansible_os_family == "debian" }
+71. wait_for wait for some set of time
+       - name: wait for service tot start
+	 wait_for:
+	  port: 80
+	  state: started
+72.passing variables from command line
+	ansible-playbook playbook.yml --etra-vars "variable=preetham"
