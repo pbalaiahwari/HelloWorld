@@ -1,19 +1,3 @@
-file 'filename' do
-content 'text'
-mode '0777'
-action :create | delete
-owner 'name of the user'
-end
-
-package 'name' do
-action :install|remove|upgrade
-end
-
-
-
-
-
-
 ansible
 1.yum install epel-release
 2.yum update
@@ -190,3 +174,126 @@ diff between raw and shell raw won't give out put shell will provide output
 	  state: started
 72.passing variables from command line
 	ansible-playbook playbook.yml --etra-vars "variable=preetham"
+
+
+dockers documentaion
+1.vm ware is on machine/os/vmware/os1/os2/os3 individual os will be configured according to our needs. there is a limit as our machine configuration id full.
+2.dockers is on machine/os/dockers/containers where light weight there will be no seperate operating system will run on host operating system.
+3.what is a container? it contains some layers, 
+	3.1 first layer is os image called boot fs of which operating system we need. its not complete os system.
+	3.2 the file system it going to use is union file it has read only we can only read we write in to it. its a tar file.
+	3.3 when a container is launched from a image, docker mount a read-write file system on top of any payer below.
+	3.4 evry thing you install lie git, java and other package will be layer by layer.
+	3.5 we can create the container from container by copying it.
+4. core components: Docker deamon runs on the host machine, docker client used to interact with daemon.
+5. workflow components: docker image holds the environment & your applications, docker container created from images, start, stop, run and delete, docker registry public and private repositories used to store images, docker file used to automate image construction.
+6. to creater a container need a image of readhat or os what ever we need. download the redhat image from docker registry.
+7. installation of docker on redhat
+	# pre-requisite for container-selinux-2.9-4.el7.noarch.rpm
+	sudo yum install policycoreutils-python
+
+	wget http://mirror.centos.org/centos/7/extras/x86_64/Packages/container-selinux-2.21-1.el7.noarch.rpm
+	sudo rpm -i container-selinux-2.21-1.el7.noarch.rpm
+
+	#Set up the Docker CE repository on RHEL:
+	sudo yum install -y yum-utils
+	sudo yum install -y device-mapper-persistent-data lvm2
+	sudo yum-config-manager --enable rhel-7-server-extras-rpms
+	sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+	sudo yum makecache fast
+
+	# Install the latest version of Docker CE on RHEL:
+	sudo yum -y install docker-ce
+
+	#Start Docker:
+	sudo systemctl start docker
+
+	#Test your Docker CE installation:
+	sudo docker run hello-world
+
+	# configure Docker to start on boot
+	sudo systemctl enable docker
+8."docker info" to check the information of docker. 
+9.how to create a container, first the layer of the image ubuntu or any os 
+	we need home directory.
+	we need a shell environment to connect to the os. mostly used bash shell.
+	startup script .bashrc in home dir
+	"docker run -i -t ubuntu //bin/bash" -i input to the container -t terminal ubuntu image bin/bash shell environment.
+10.when we run the command we will be in the ubuntu machine now, use hostname to see the machine name.
+11. check the linux flavour to check whihc linux you are in.
+12.command to see the user of the container whoami
+13.how to come out of the container exit 
+14.command to see all the images available on docker engine "docker images"
+15.command to see all the images available in docker repo "docker search ubuntu" will give you all ubunut os with various application.
+16.command to download the images "docker pull debian"
+17.container naming "docker run -name preetham -it ubuntu //bin/bash"
+18.how to start the existing container "docker start preetham" for stoping use stop command.
+19.how to go in to the container "docker attach preetham"
+20."docker ps" will show the running containers.
+21."docker ps -a" will show all the containers.
+22.command to delete a container "docker rm name/id"
+23.creating daemonized container docker run --name preetham -d ubuntu //bin/sh -c "whiletrue; do echo hello world; sleep 1; done"
+	while true ##loop
+	echo "hello students"  ## print
+	sleep 1 ##wait for a second
+	done ## finish
+	this will create a container and run the process. we can't access or see it.
+24.if we want to see what's happening in the container "docker logs -f preetham" -f will show the continous output.
+25.inspect the container running "docker top preetham"
+26.how to share a container with others 
+	create a image "docker commit preetham" this will create a image based on some value
+	create a image with name "docker commit preetham myfirstimage"
+	we can name a image by command "docker tag image-name/id"
+27. to see the diff from original docker image "docker diff preetham"
+28. docker files create a docker file.
+	1. base image to use
+	2.entry point
+	3.command to do in steps
+29.sample file 
+	from <imagename>
+	USER username
+	WORKDIR location
+	COPY ##location of the file## /tmp/
+	run touch /tmp/testfile  ##CMD["echo", "hi"] ##to specify work directory "WORKDIR /temp/" "ENV myname preetham"
+	ENV myname PREETHAM
+30.build a image "docker build -t imagename <filename>"
+31.run time working directory docker run --name container_name -w /temp/ -it image_name //bin/bash we ccan specify inside a file or at run time
+32.environment variables:- 
+	ENV name_of_the_environment_varible preetham
+33. if we want to define a user in docker to start a container 
+	"USER nobody"
+34. how to copy a file "COPY location"
+35.how to untar a file while making a container "ADD '.tar_file' extract to location"
+36.ONBUILD:
+	when we need to create a image from another image along with some additional work.
+	ONBUILD RUN echo "test" > /tmp.test.txt
+37.MAINTAINNER preetham "mail_id"
+38. volumes which can be shared between two containers. container doesn't have to run to share a volume.
+	volume ia directory in container.
+	Volume source destination "VOLUME ["/opt/project", "/data"]
+39.volumes can also be declared from cmd-line
+	"docker run -it -v /usr/data ubuntu"
+	sample file 
+	FROM ubuntu
+	VOLUME ["/home/ec2-user/docker", "/data/"]
+40.command to use the volume of a existing container in new container
+	"docker run -it --name container_name --priviliged=true --volumes-from container_which_contain_volume image //bin/bash"
+41.how to share a volume between host and container
+	"docker run -it --name container_name -v /home/ec2-user/docker://tmp/data --priviliged=true ubuntu //bin/bash"
+42.check data defined in a image
+	"docker inspect container/-name"
+43."docker inspect --format '{{ .NetworkSettings.IPAddress}}' container_name"
+44."docker inspect --format='{{ .State.Running }}' container_name"
+45.EXPOSE 8080 in docker file
+	-->to tell what ports are to be published in this image.
+	-->https://hostname:8000 this will connect to container with port 8080
+	-->command "docker run -it --name jenkins -p 8080:8080 jenkins //bin/bash" 
+
+46.deleting images 
+	"docker rmi name_of_image"
+47.deploying a registry server
+	start your registry "docker run -d -p 5000:5000 -restart=always -name registry registry:2"
+	tag a image in the registry "docker tag ubuntu localhost:5000/ubuntu"
+	push image to registry "doker pull localhost:5000/ubuntu"
+	stop registry "docker stop registry" "doocker rm -v registry"
+48. how to delete every available image "docker rmi'docker images -a -q'"
