@@ -297,3 +297,66 @@ dockers documentaion
 	push image to registry "doker pull localhost:5000/ubuntu"
 	stop registry "docker stop registry" "doocker rm -v registry"
 48. how to delete every available image "docker rmi'docker images -a -q'"
+
+
+
+installation instructions for docker on redhat and centos enterprise edition.
+	# pre-requisite for container-selinux-2.9-4.el7.noarch.rpm
+	
+	wget http://mirror.centos.org/centos/7/extras/x86_64/Packages/container-selinux-2.21-1.el7.noarch.rpm
+	sudo rpm -i container-selinux-2.21-1.el7.noarch.rpm
+
+	#Set up the Docker CE repository on RHEL:
+	sudo yum install -y yum-utils
+	sudo yum install -y device-mapper-persistent-data lvm2
+	sudo yum-config-manager --enable rhel-7-server-extras-rpms
+	sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+	sudo yum makecache fast
+	
+	# Install the latest version of Docker CE on RHEL:
+	sudo yum -y install docker-ce
+
+	#Start Docker:
+	sudo systemctl start docker
+
+	#Test your Docker CE installation:
+	sudo docker run hello-world
+
+	# configure Docker to start on boot
+	sudo systemctl enable docker
+
+	# add user to the docker group 
+	sudo usermod -aG docker jethro
+
+	# install Docker Compose:
+	# install python-pip
+	wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+	sudo yum install ./epel-release-latest-7.noarch.rpm
+	sudo yum install -y python-pip
+
+	sudo pip install docker-compose
+
+	# upgrade your Python packages:
+	sudo yum upgrade python*
+
+docker swarm for diff host
+1. docker swarm is a technique to create and maintain a cluster of docker engines.
+2. service deployed in any node can be accessed on other nodes in the same cluster.
+3. docker manager controls all the nodes(docker engines on nodes). so we can start any service start a container on any docker engine.
+4. manager itself also act as a node 
+5. loadbalancing is done by docker no need of wory about that.
+6. to initialize the docker swarm command "docker swarm init --advertise-addr ip-address" this will create a token to add the nodes to the manager.
+7. "docker swarm join --token SWMTKN-1-2jak7r60qvy5vdxk9syv1hl7hbescd5x54mx8tej4plbc074yi-2daund345c5qdik7be9jjj1au 34.209.155.236:2377" this is the code generated on manager machine.
+8. list services on docker swarm "docker service ls"
+9. list task of services on docker swarm "docker service ps <name>"
+10. create a new service "docker service rm <name> <image-name>"
+11. scale a service "docker service scale <name>=5"
+12. commands on docker node 
+	list the nodes "docker node ls"
+	list services in nodes "docker node ps"
+	remove node "docker node rm <id>"
+13. to leave the swarm "docker swarm leave --force" if there are nodes on swarm than it will not be leaving until the nodes are deleted.
+14. to create a service on all the nodes "docker service create --name "ang-app" -p 4200:4200 --mode global/replica demonapp1"
+15. docker node update --availability drain/active manager-1
+16. 
