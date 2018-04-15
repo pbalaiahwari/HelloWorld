@@ -1,0 +1,11 @@
+aws_access_key = "AKIAIDR3CB7ARZUDCHYA"
+aws_secret_key = "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"
+aws_region =  "us-east-1"
+vpc_id = "vpc-3f1ee747"
+instance_subnets = "subnet-d119cfee,subnet-7878cb1c,subnet-14c1ed18"
+elb_subnets = "subnet-d119cfee,subnet-7878cb1c,subnet-14c1ed18"
+asg_minsize = "1"
+asg_maxsize = "2"
+eb_environment_name = "staticapp-Testing"
+elb_80_cidr_blocks = ["0.0.0.0/0"]
+ec2_instance_type = "t2.micro"
